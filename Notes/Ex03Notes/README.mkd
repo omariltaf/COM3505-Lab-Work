@@ -1,0 +1,12 @@
+Exercise 03 Notes
+===
+
+# Extension to Blinky (exercise 02)
+
+Go ahead and assemble the components shown in the schematic on your breadboard
+![Blinky Traffic Lights schematic](Blinky-traffic-lights-schematic.png
+"Blinky Traffic Lights schematic")
+
+You should have a breadboard that looks like this: ![Blinky Traffic Lights
+breadboard](Blinky-traffic-lights-breadboard.png  "Blinky Traffic Lights
+breadboard")

@@ -1,0 +1,74 @@
+COM3505 2018 Marking Scheme
+===
+
+COM3505 is a 10 credit level 3 course. Marks are allocated for **practical
+work** (60%, based in the DIA 2.02 Electronics Lab) and for a **MOLE exam**
+(40%).
+
+Practical work is mostly done in pairs, with each pair checking into a joint
+code repository (on GitHub). This work comprises some hardware elements (basic
+circuit prototyping, measurement and soldering), some firmware elements
+(developing code that runs a networked microcontroller and associated sensors
+and actuators), and some software elements that run in the cloud (to process
+data posted by firmware). Each lab pair must check in their firmware code
+regularly (at minimum weekly, before the model solutions are published). You
+must also get a teaching assistant to scan your uCard at each lab session.
+
+Each week's lecture finishes with a TODO list for the subsequent week, and
+each week a set of notes are published to your GitHub repository. If you
+completed all the TODOs and all the assignments in the notes at perfect
+quality you would score 100% in the lab assessments. If you completed half the
+assignments at acceptable quality you should pass the course. Most performance
+falls somewhere between these two extremes!
+
+In weeks 6 and 12 each pair demonstrates their work to the teaching staff
+during two formal lab assessment sessions. The first of these covers exercises
+from the first half of term, and the second covers project work.
+
+(Note: during weeks 1 to 5 and 7 to 11 we **do not** mark your work, but we do
+record data about how the labs are going, how people find the exercises, what
+the levels of learning are like and so on. This is needed for two reasons: 1.
+as background knowledge that we will use in weeks 6 and 12 to help structure
+our formal assessments; 2. to help us give you feedback and help us adjust the
+course to better fit student capabilities.)
+
+In week 12 individuals are given a **MOLE quiz** covering the material in the
+lectures. (This is not assesssed as a pair but as individuals.)
+
+Code is assessed according to both functionality (does the device do what is
+intended? is the operation robust in face of different conditions?) and
+quality (is it structured to enhance readability and maintainability? is there
+appropriate commenting? does it conform to a style and stick to it? are
+interfaces minimised and simplicity maximised? etc.). In addition
+documentation (when requested) is assessed, and students' abilities to explain
+their work during the two formal assessments. Your understanding of the
+principles behind the material is further assessed during the exam in week 12.
+
+The assessment schedule is:
+
+- weekly **monitoring** of code quality (via GitHub, with marking checkpoints
+  at weeks 6 and 12)
+- **lab assessment 1**, week 6
+- **lab assessment 2**, week 12
+- **MOLE quiz**, week 12 (mock at week 7)
+
+Feedback on work quality will be available every week during the lab sessions,
+from the lecturing and teaching assistant staff. **MOLE** results will be made
+available soon after the exam.
+
+**Note**: teamworking is an important skill in software engineering (for
+example in pair programming). Success depends on both social and technical
+skills. We expect the members of each lab pair to contribute equally to the
+work; if this proves difficult for particular reasons (e.g. illness or
+absence) the pair should contact lecturing staff in timely fashion for
+discussion. If both members of a pair agree at the end of the course that the
+balance has been unequal, they should jointly write to the lecturer stating
+what distribution of effort they believe to be fair (e.g. 60-40 or 70-30 or
+etc.).
+
+**Also note** that model solutions to the weekly assignments are published at
+the end of each week (up to two hours before the lecture). It is fine to build
+on these solutions in subsequent weeks. Therefore it is not a requirement that
+you are successful in all of each week's assigments: if something proves too
+difficult make your best attempt, then can catch up based on the model
+solution in subsequent weeks.

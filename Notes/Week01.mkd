@@ -1,0 +1,204 @@
+COM3505 week 01 course notes
+===
+
+# The Lecture
+
+This week's lecture slides are here: https://goo.gl/HejEFz
+
+
+# Learning Objectives
+
+Our objectives this week are to:
+
+- get to know the Diamond electronics lab
+- understand how to prototype basic circuits on a breadboard
+- practice soldering on a simple circuit
+- learn about measuring simple values in the electronics lab
+- check out the course materials from github
+- set up the programming environment and start coding
+
+
+# Assignments
+
+- You should by now be allocated to a pair: https://goo.gl/DX8UeB
+    - if you have a TODO by your name add a comment with the relevant detail
+    - if you're not there, or need to change your pair, see Hamish ASAP
+- Pick up a kit from the staff; you can keep this until week 6 but then you
+  need to hand it back (in good condition!). You will need to have your uCard
+  scanned to pick up a kit.
+- Use the separate handout _COM3505 DIA 2.02 introduction_ to practice
+  breadboarding, soldering and using a multimeter: https://goo.gl/GkGvJT
+- Accept the github classroom assignment by following this link:
+  https://tinyurl.com/com3505-2018-repo (this will create a git repository for
+  you, hosted on github). All your work **must** be pushed to this repository
+  promptly each week. **Create ONE repository per pair.**
+- Use the Linux option when booting machines in the electronics lab.
+- Check out the repository from github into your own file space. (If you're
+  reading this from there then you've done that task!)
+    - `git clone ...url...`
+    - Note: don't "download" from github, you need to "clone".
+- Use any method you like to post your Sheffield email address and github ID
+  to our server. The URL was given during the lecture.
+- Learn a little C! See the resources listed in the lecture slides for help.
+- Set up your programming environment (next section).
+- Study the notes below about LiPo batteries.
+
+
+## Set up your environment
+
+- **Note:** as discussed in the lecture, we're most able to support you if you
+  use the Linux option on the lab machines. You're welcome to use the windows
+  option instead, or to install the Arduino IDE and libraries on your own
+  laptop -- but we won't necessarily be able to fix all problems you may
+  encounter if you do so. If you choose to do your own installation,
+  instructions for the Arduino IDE and ESP32 layer can be found here --
+  https://github.com/espressif/arduino-esp32#installation-instructions
+  Otherwise read on!
+- copy or link the libraries and support files for ESP32 on the Arduino IDE
+    - [linux/ubuntu]:
+        - open a terminal (Cntrl&Alt&T)
+        - make a link to a directory called `Arduino` to pick up the Adafruit
+          ESP32 Feather board definition, and the libraries that we're using
+          on the course:
+              - `cd; ln -s
+                /resources/hc/esp-resources/esp-arduino-ide/Arduino`
+        - make a link to the Arduino IDE runner script:
+              - `cd; ln -s
+                /resources/hc/esp-resources/esp-arduino-ide/arduino-1.8.5/arduino`
+        - you can now start the Arduino IDE by running `cd; ./arduino` in a
+          terminal
+    - [windows]:
+        - on each new machine you use:
+        - is Arduino installed? if not go to Software Center and install
+          Arduino-1.8.4-MSI
+        - you also need a specific set of libraries which are available from
+          the Software Center called `Arduino COM3505 Libraries and Hardware`
+        - when you've started the IDE, make sure from `File>Preferences` that
+          the `Sketchbook location` is set to your home directory, not `My
+          Documents` (as this is where the libraries from the previous step
+          get installed)
+    - [on your own machines]:
+      - install the Arduino IDE from https://www.arduino.cc/ and then follow
+        the instructions at https://github.com/espressif/arduino-esp32
+- you should now have something like this:
+    - `com3505-labs-YourGitHubId/MyThing/`: your code goes here
+    - `com3505-labs-YourGitHubId/Notes/`  : weekly notes update
+    - `Arduino/`: libraries & core to support ESP32
+    - from Week 2 you'll also have `com3505-labs-YourGitHubId/Thing/`  :
+      weekly model code update
+    - **NOTE**: DON'T edit the `Thing/\*` and `Notes/\*` trees!
+- pair working and github: both members of the pair can have copies of the
+  repository and push code if that works for you, but make sure that you're
+  both working with the same repository (and pushing back to origin / master)
+- set up the Arduino IDE
+    - from the Linux terminal do: `./arduino`
+    - from Windows use the start menu to run `Arduino 1.8.4`
+    - use an external editor if you like
+    - **don't** ask the IDE to update your libraries -- we'll do that via your
+      github repo -- so uncheck File > Preferences > Check for updates on
+      startup
+- get ready to code
+    - plug in your ESP32
+    - open the MyThing sketch
+    - select the board (Adafruit ESP32 Feather) from the Tools menu
+    - select the port (probably `/dev/ttyUSB0` or `/dev/ttyUSB1` on Ubuntu)
+    - serial monitor baud rate should be 115200
+
+<!-- OLD VERSION
+        - in the top left of your desktop (possibly hidden by the browser) you
+          should have an icon "Access-U-drive"; click on it and enter your
+          password
+        - you should now have "Access-Shared-Resources"; click on it
+        - open a terminal (Cntrl&Alt&T)
+        - create a link to your U drive filespace and move there:
+            - `cd; ln -s $U u-drive`
+            - `cd u-drive`
+        - unpack the Arduino libraries and compiler chain:
+            - `tar xvzf /mnt/resources/arduino/Public/Arduino.tgz`
+        - in your home directory make a link to the Arduino directory that you
+          just created:
+            - `cd; ln -s u-drive/Arduino`
+-->
+
+
+# Timetable
+
+- **Notes**:
+    - Sorry this is so complex! The Diamond Electronics Lab (DIA 2.02) is very
+      popular...
+    - We have one lecture (of one hour) and one lab (of two hours) per week.
+    - Diamond 2.02 is the electronics lab.
+    - Diamond 1.01 is the project space (where you can use the iForge
+      facilities if you wish).
+    - NC PC is the North Campus PC lab; enter from Broad Lane, turn right
+      through the gates and it is on the ground floor of the big grey
+      portacabin on your right. (Allow lots of travel time!)
+- Weekly schedule:
+    - Lectures
+        - DIA LT5  11am--12pm Fridays weeks 1-5,7-11
+    - Labs (assessments: **week 6**, **week 12**)
+        - DIA 2.02
+            -       9am--11am Mondays weeks 2-5,10
+            -      12pm--2pm  Fridays weeks 1,7,12
+            -       1pm--3pm  Friday  week  6,8
+        - NC PC     9am--11am Monday  week  9,11
+    - MOLE quizzes (one mock, in week 7, one exam, in **week 12**)
+        - NC PC     9am--11am Mondays weeks 7,12
+    - Week by week:
+        - Week  1
+            - Fri 11-12 LT5       lecture  1
+                - Click Here to Kill Everyone
+            - Fri 12-2  DIA 2.02  lab      1
+        - Week  2
+            - Mon  9-11 DIA 2.02  lab      2
+            - Fri 11-12 LT5       lecture  2
+                - Revolutionary Code: from MIT Printers to the Arduino
+        - Week  3
+            - Mon  9-11 DIA 2.02  lab      3
+            - Fri 11-12 LT5       lecture  3
+                - Small but Perfectly Formed... Digging into the ESP32
+        - Week  4
+            - Mon  9-11 DIA 2.02  lab      4
+            - Fri 11-12 LT5       lecture  4
+                - Country of the Blind: Networking Devices Without UIs
+        - Week  5
+            - Mon  9-11 DIA 2.02  lab      5
+            - Fri 11-12 LT5       lecture  5
+                - Sensing and responding
+        - Week  6 [reading week / assessment 1]
+            - Fri  1-3  DIA 2.02  [LAB ASSMT. 1]
+        - Week  7
+            - Mon  9-11 NC PC [MOLE quiz: mock]
+            - Fri 11-12 LT5       lecture  6
+                - Connectivity and Provisionning: Joinme/WiFi, Sigfox, LoraWan
+                  and NB-IoT
+            - Fri 12-2  DIA 2.02  lab      6
+        - Week  8
+            - Fri 11-12 LT5       lecture  7
+                - unPhone Yourself — an IoT Projects Platform
+            - Fri  1-3  DIA 2.02  lab      7
+        - Week  9
+            - Mon  9-11 NC PC     lab      8
+            - Fri 11-12 LT5       lecture  8
+                - Projects Q&A
+        - Week 10
+            - Mon  9-11 DIA 2.02  lab      9
+            - Fri 11-12 LT5       lecture  9
+                - WaterElves, Gripples and Fish Poo: IoT Case Studies
+        - Week 11
+            - Mon  9-11 NC PC     lab     10
+            - Fri 11-12 LT5       lecture 10
+                - IoT 2018: Review
+        - Week 12 [exam / assessment 2]
+            - Mon  9-11 NC PC [MOLE quiz: EXAM]
+            - Fri 12-2  DIA 2.02  [LAB ASSMT. 2]
+
+
+# Reading
+
+- Schneier, Bruce. 2017. “Click Here to Kill Everyone.” NY Mag, January.
+  http://nymag.com/selectall/2017/01/the-internet-of-things-dangerous-future-bruce-schneier.html.
+- Ashton, Kevin. 2011. “That ‘Internet of Things’ Thing.” RFiD Journal 22 (7).
+  http://www.itrco.jp/libraries/RFIDjournal-That%20Internet%20of%20Things%20Thing.pdf
+- NERC. 2016. “NERC Guidance on the Safe Use of Lithium Batteries.”
+  http://www.nerc.ac.uk/about/policy/safety/procedures/guidance-lithium-batteries/

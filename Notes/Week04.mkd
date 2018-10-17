@@ -1,0 +1,87 @@
+COM3505 week 04 course notes
+===
+
+# The Lecture
+
+The week 3 lecture slides are here: https://goo.gl/Yphqad
+
+<!--
+This week's lecture slides are here: https://goo.gl/2YWYEE
+-->
+
+
+# Learning Objectives
+
+Our objectives this week are to:
+
+- deepen our understanding of the hardware space around the IoT (SoCs and
+  MCUs, devices vs. gateways, ...)
+- learn about the firmware/software languages used for the IoT
+- start practical work with the ESP's wifi stack
+
+
+# Assignments and Assessment
+
+_Internet? What internet?!_ Up to now we've been programming the ESP as a
+standalone device. In the next period we'll create and connect to networks,
+and figure out how to configure connections for devices without UIs. There are
+two code exercises this week:
+
+- **Ex06**: becoming a wifi access point and web server
+   - The ESP can act as a wifi access point, and is powerful enough to run a
+     simple web server. Using `WiFi.h` and `ESPWebServer.h` fire up an access
+     point and serve one or more pages over the web.
+   - `ESPWebServer webServer(80);` will create a web server on port 80
+   - `webServer.on("/", handleRoot);` will register the procedure `handleRoot`
+     to be called when a web request for `/` is received
+   - `webServer.send(200, "text/html", toSend);` will serve a page from the
+     `String` `toSend`
+   - `WiFi.mode(WIFI_AP_STA))` and `WiFi.softAP("ssid", "password")` will
+     create an access point
+- **Ex07**: simple utilities for creating web pages
+   - C (and to a degree) C++ is a low-level language, and generating HTML
+     simply and efficiently can be challenging. To maintain a different long
+     string for each page you want to serve on the device is unwieldy and
+     error-prone. Create some utilities for representing and manipulating HTML
+     elements and serving pages. (You might take inspiration from templating
+     libraries, for example.)
+
+In addition (and as usual) have a look at the model code from last week
+(**Ex02** through **Ex05**), and organise your own code exercises in a similar
+way in the **MyThing** directory.
+
+
+# Reading
+
+Check out **Kolban's book on ESP32** (Neil Kolban) at
+https://leanpub.com/kolban-ESP32 -- it is a work in progress but free and with
+loads of good stuff. (His snippets library on github is worth a look too!)
+
+To get a head start on next week, try the Sparkfun tutorials on communications
+protocols:
+
+- https://learn.sparkfun.com/tutorials/serial-communication
+- https://learn.sparkfun.com/tutorials/i2c
+
+
+# Notes on the model code from Week 3
+
+```Arduino
+12  pinMode(14, INPUT_PULLUP); // pin 14: digital input, built-in pullup resistor
+```
+
+This <span style="color:#D35400">pinMode</span> call enables built-in pullup
+resistors connected between the pin and the positive supply voltage (3.3V).
+These prevent the input 'floating' when it isn't connected to anything and
+instead make the input go high.
+
+```Arduino
+  if(digitalRead(14) == LOW) { // switch pressed
+```
+
+The <span style="color:#D35400">digitalRead</span> function  returns the
+binary state of the input pin given as a parameter. Because we are using a
+pullup resistor and connecting the switch to 0V -- the logic that <span
+style="color:#D35400">digitalRead</span> returns is reversed. Therefore, when
+the switch is pressed, the function returns <span
+style="color:#00979C">LOW</span>.

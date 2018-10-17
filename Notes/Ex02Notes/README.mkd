@@ -1,0 +1,61 @@
+Exercise 02 Notes
+===
+
+# Sensor/actuator board
+
+We are using a breadboard (also known as proto-board) to assemble our circuits
+in the labs. Breadboards allow components and wires to be pushed into holes
+and connected without soldering.
+
+To recap, a breadboard has some connections between holes already made --
+shown in this diagram: ![Diagram of breadboard
+connections](Breadboard-connections.png "Diagram of breadboard connections")
+(from: http://kornakprotoblog.blogspot.co.uk/)
+
+
+# Using a breadboard to make a sensor/actuator circuit
+
+Take your soldered ESP32 feather device and carefully lay it in place on the
+breadboard over the holes indicated: ![Feather in
+breadboard](Feather-in-breadboard.png  "Feather in breadboard")
+
+Now push gently on the edges of the feather to insert the pins into the holes
+-- you are aiming to keep the device parallel to the breadboard as it goes
+into the holes, rather than push one side down and leave the other up. Keep
+moving around pushing in different places if it seems stuck -- often new
+breadboards are a bit stiff at first. If the pins aren't going in easily then
+check that they are all lined up above the holes correctly -- if not you can
+bend them gently with a pair of fine pliers. You will need to use some force
+to push the device down onto the breadboard. To get an idea of how much force
+might be needed, take a jumper wire and try inserting that into a hole, then
+multiply that by 28. Try not to bend the header pins -- if you do then use the
+pliers to return them to their correct orientation. Once the feather device is
+inserted, add the LED, resistor and push-button switch as shown: ![Blinky
+components in breadboard](Blinky-in-breadboard.png  "Blinky components in
+breadboard")
+
+Pay attention to the orientation of the LED -- as it is a *Diode* it will only
+work one way round. The longer lead of the LED is the annode and it connects
+to the ESP32 output pin -- the shorter lead is the cathode and it connects to
+the negative or ground connection. Add jumper leads to complete the circuit as
+shown -- colour codes help to make the circuit more readable: ![Blinky
+components with connections in
+breadboard](Blinky-in-breadboard-with-connections.png  "Blinky components with
+connections in breadboard")
+
+The circuit pictured above can be represented as a schematic -- this is a more
+abstract representation of the components and connections: ![Blinky
+schematic](Blinky-schematic.png  "Blinky schematic")
+
+The trick here is that the LED is connected to pin 32 and the switch to pin
+14, so we might usefully define these as `int pushButton = 14, externalLED =
+32;`.
+
+The code for this sketch should make use of the internal pull-ups inside the
+ESP32. Simply pass a different macro to the pinMode command:
+`pinMode(pushButton, INPUT_PULLUP);` These are optional resistors that connect
+to +v and the input pin. These make the inputs high, unless they are connected
+to ground. See this diagram:
+
+![Diagram of internal pull-up](pullup.png "Diagram of internal pull-up")
+

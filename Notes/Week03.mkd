@@ -1,0 +1,106 @@
+COM3505 week 03 course notes
+===
+
+# The Lecture
+
+The week 2 lecture slides are here: https://goo.gl/Z8xHei
+
+<!--
+This week's lecture slides are here: https://goo.gl/Yphqad
+-->
+
+
+# Learning Objectives
+
+Our objectives this week are to:
+
+- understand more about the ESP32 and the Arduino IDE
+- work with GPIO sensing (from a switch) and actuating (LEDs)
+- experiment with time slicing in the main loop
+- add debug code to sketches
+
+
+# Assignments and Assessment
+
+- as usual, pull the new stuff into your com3505-labs-... tree:
+    - `cd com3505-labs-YourGitHubId; git pull`
+- also as usual, DON'T edit the `Thing/\*` and `Notes/\*` trees
+- note that you now have [Ex01.h](../Thing/Ex01.h) /
+  [Ex01.ino](../Thing/Ex01.ino) in your [Thing](../Thing) directory, which
+  contains a model solution to last week's exercise(s)... please study this
+  each week and compare it with your solution
+- add an LED and a switch to your breadboard
+    - instructions and diagrams [are here](Ex02Notes)
+- and add code to your `MyThing` sketch to:
+    - **Ex02**: blink the external LED; read from the switch
+        - note: you'll need the INPUT_PULLUP macro for the switch code
+    - **Ex03**:
+        - add more two more LEDs to your board [see here](Ex03Notes)
+        - run as traffic lights, triggered by the switch
+    - **Ex04**: debugging infrastructure: experiment with macros to allow
+      adding flexible debug code
+    - **Ex05**: arrange for tasks to be performed in different loop iterations
+      (e.g. every 1000 iterations do X; every 50k iterations do Y; ...)
+
+
+# Reading
+
+Have a general look around at the ESP32 Forum: https://esp32.com/
+
+Also the “Arduino IDE Guide”: https://www.arduino.cc/en/Guide/Environment
+
+
+# Notes on the model code from Week 2
+
+## Recap: connecting to the ESP32
+
+The ESP32 board we are using has a micro-usb socket to provide power and also
+allow communications between the microcontroller and your computer. Start by
+connecting the two together using the supplied cable. Start the Arduino IDE
+and look in the Tools > Port menu to check that the serial connection has been
+established. Ensure that the Tools > Board selected is the "Adafruit ESP32
+Feather".
+
+
+## Arduino coding
+
+Note: in the Arduino IDE certain words such as OUTPUT, HIGH, TRUE etc. are
+pre-defined and shown in blue. Similarly functions such as pinMode,
+Serial.begin are coloured in orange -- this can help you catch syntax errors.
+
+```Arduino
+5  Serial.begin(115200);           // initialise the serial line
+```
+
+Serial communication (sending or recieving text characters one by one) has to
+be initiated with a call to the <span style="color:#D35400">begin</span>
+function before it can be used. The serial communications between the ESP32
+and computer can operate at various speeds or baud rates -- we use 115200
+baud. If you aren't getting any response, or gibberish characters on the
+serial port monitor, then check you've got the correct speed set.
+
+```Arduino
+7 pinMode(BUILTIN_LED, OUTPUT);   // set up GPIO pin for built-in LED
+```
+
+pinMode is an Arduino command that tells the microcontroller to set up a
+single pin (first parameter) using a certain mode (second parameter). The two
+basic modes are INPUT and OUTPUT.
+
+```Arduino
+13   delay(1000);                  // ...and pause
+```
+
+The delay function in Arduino takes milliseconds as it's parameter -- so a
+<span style="color:#D35400">delay</span>(1000); command pauses for 1 second.
+
+```Arduino
+20 uint64_t mac = ESP.getEfuseMac(); // ...to string (high 2, low 4):
+```
+
+The ESP32 Arduino layer includes some helpful functions like this one to allow
+us to get (read) the status of the electronic fuses. After the silicon for the
+ESP32 is manufactured using a common mask, each one is programmed to give it a
+unique identity -- including things like MAC addresses. These are one-time
+electronic 'fuses' that burn the MAC address into the chip so that it cannot
+be reprogrammed.

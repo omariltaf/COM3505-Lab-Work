@@ -1,0 +1,73 @@
+COM3505 week 02 course notes
+===
+
+# The Lecture
+
+The lecture is happening at the end of week 2... so we'll link the slides from
+the week 3 notes.
+
+<!--
+This week's lecture slides are here: https://goo.gl/Z8xHei
+-->
+
+
+# Learning Objectives
+
+Our objectives this week are to:
+
+- solder the headers on to your ESP32
+- make sure we understand how to code in the Arduino IDE and burn new firmware
+  to the ESP32, and create a simple _sketch_ to blink an LED or two
+- explore useful background on the Arduino ecosystem, open source and open
+  hardware culture
+- start exploring the hardware space of IoT devices
+
+
+# Assignments
+
+- pull any new stuff into your com3505-labs-... tree:
+    - `cd com3505-labs-YourGitHubId; git pull`
+    - do this (at least!) every week of the course!
+
+
+## Exercise 1 (Ex01)
+
+- hints
+    - you will need to use the Arduino library functions `Serial.begin` and
+      `pinMode` (in `setup`), and `Serial.println` and `digitalWrite` (in
+      `loop`); the ESP32 library function getEfuseMac will give you access to
+      the MAC address
+    - the Arduino IDE has lots of example sketches built in... (see
+      `File>Examples`; the `ESP32>ChipID` for an example of using `Serial`,
+      and `Tools>Serial Monitor` to see the results)
+- **Ex01**: update the MyThing code to:
+    - blink the built-in LED
+    - print the device MAC address on the serial line (and monitor it in the
+      IDE)
+    - research the issues involved with String processing on the Arduino
+      platform, and add commented code to your sketch illustrating the various
+      alternatives
+    - if you're feeling brave, try and work out the problem with the results
+      returned by `getEfuseMac` -- how would you fix that?
+- check in and push your code
+    - git add [any files you added]
+    - git commit -vam "a helpful commit message"
+    - git push
+
+
+# Reading
+
+Greenfield, Adam. 2017. “Rise of the Machines: Who Is the ‘Internet of Things’
+Good For?” The Guardian, June 6. https://goo.gl/uIUCrD 
+
+Essays and lectures on free software: 
+- Stallman, Richard. 2002. Free Software, Free Society: Selected Essays of
+  Richard M. Stallman. https://www.gnu.org/philosophy/fsfs/rms-essays.pdf
+- https://www.gnu.org/philosophy/essays-and-articles.en.html
+
+The End of Ownership: Personal Property in the Digital Economy, Aaron
+Perzanowski, Jason Schultz, MIT Press 2016 https://mitpress.mit.edu/end
+
+Open Rights Group: https://www.openrightsgroup.org/
+
+Doctorow, Cory. Pirate Cinema. 2012  http://craphound.com/pc/download/

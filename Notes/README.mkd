@@ -1,0 +1,7 @@
+# Course Notes for COM3505
+
+This directory contains the COM3505 IoT course notes. There's a notes page for
+each week of the course, which will be available to pull from `github.com`.
+
+Check out the Week01.mkd notes for week 1, etc. (You can also read them
+on-line on `github`.)
