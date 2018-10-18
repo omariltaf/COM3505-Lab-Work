@@ -1,5 +1,6 @@
-// MyThing.ino
-// COM3505 Week 2 lab exercises sketch
+// Week04.ino
+// COM3505 Week 4 Sketch
+// Ex06-Ex07
 // Omar Iltaf & Neville Kitala
 
 #include <WiFi.h>
@@ -12,15 +13,17 @@ ESPWebServer webServer(80);
 
 void handleRoot() {
   digitalWrite(LED_BUILTIN, 1);
-  webServer.send(200, "text/plain", "hello from esp!");
+  webServer.send(200, "text/html", "hahhahha!");
   digitalWrite(LED_BUILTIN, 0);
 }
 
-void setup() {
+void setup04() {
   Serial.begin(115200);
 
   WiFi.mode(WIFI_AP_STA);
   WiFi.softAP(ssid, password);
+  Serial.println(WiFi.softAPIP());
+  
 
   //Print the server name and password and local IP
   
@@ -39,7 +42,6 @@ void setup() {
 
 }
 
-void loop() {
+void loop04() {
   webServer.handleClient();
 }
-
