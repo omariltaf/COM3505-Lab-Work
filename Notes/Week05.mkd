@@ -1,0 +1,109 @@
+COM3505 week 05 course notes
+===
+
+# The Lecture
+
+This week's lecture slides are here: https://goo.gl/JrABbj
+
+
+# Learning Objectives
+
+Our objectives this week are to:
+
+- make it to (almost) half way without collapsing!
+- put some of the jigsaw together and start creating our first true IoT
+  devices, by dealing with the issue of how to connect WiFi devices without
+  user interfaces to local network access points
+- start to look beyond the device and examine options for cloud-based data
+  logging, analysis, and remote triggers or control
+- understand more about the protocols used to communicate between external
+  devices and the ESP32
+
+
+# Assignments and Assessment
+
+To turn _things_ into _internet things_ we need to connect them to a network.
+One way to connect a device without a user interface to a wifi network is to
+make it a wifi access point and serve a website that displays what network
+access points are available. We can then allow the user to choose an access
+point and enter the key.
+
+- **Ex08**: become a web client and send your email & the MAC address of your
+  ESP to our server (see lecture 1 slide 21 for the URL, or below)
+    - you'll need to use the WifiClient class from the WiFi library, see e.g.
+      https://github.com/espressif/arduino-esp32/blob/master/libraries/WiFi/examples/WiFiClient/WiFiClient.ino
+- **Ex09**: adapt Ex07/08 to allow connection of the device to arbitrary
+  networks
+    - in Ex07 you learned how to create a wifi access point and serve HTML
+      pages to devices connected to that access point
+    - using the `WiFi.scanNetworks()` method, serve HTML pages that list the
+      available access points that the ESP can see, and allow a user to choose
+      one, enter its key, and have the ESP connect to that network
+    - `WiFi.printDiag(Serial);` is useful for printing wifi status
+    - the default IP address of the ESP when running in access point mode is
+      192.168.4.1 -- so if you join the ESP's network from a phone or laptop,
+      go to http://192.168.4.1/ to see pages served from the device
+
+
+## Coding hints
+
+We can use the solutions from Ex06 (create an access point and web server) and
+Ex07 (utilities for creating web pages) to get us started here. (See the
+arrangements for running multiple setups and loops in the `Thing.ino` for an
+example of chaining the various exercises together.) Then for Ex08 and Ex09 we
+can use the `WiFi` and `WiFiClient` classes, with calls to these methods:
+
+- `WiFi.begin(uosotherSsid, uosotherPassword)`
+- `WiFi.status()`
+- `WiFi.localIP()`
+- `webServer.handleClient()`
+- `myWiFiClient.connect(com3505Addr, com3505Port)`
+- `myWiFiClient.print(
+    String("GET ") + url + " HTTP/1.1\r\n" +
+    "Host: " + com3505Addr + "\r\n" + "Connection: close\r\n\r\n"
+  )`
+- `myWiFiClient.available()`
+- `myWiFiClient.stop()`
+- `myWiFiClient.readStringUntil('\r')`
+
+For Ex09 my code additionally uses:
+
+- `WiFi.scanNetworks()`
+- `WiFi.SSID(i)`
+- `WiFi.RSSI(i)`
+
+
+## Which WiFi network? What if it doesn't connect?
+
+You may find it convenient to connect your ESP to a portable hotspot created
+via your phone or other device. Alternatively, on campus you can use a network
+called `uos-other` (with key `shefotherkey05`). To use `uos-other` you need to
+register the MAC address of the device via a form linked here:
+https://www.sheffield.ac.uk/cics/wireless/other and give the backend a few
+minutes to get its bearings, take a few deep breaths, have a cup of tea and
+the like.
+
+If your ESP doesn't connect, don't panic. Try printing some diagnostics,
+phoning a friend or standing on your head and singing the Congolese national
+anthem backwards in Latin a couple of times. Then try some more diagnostics.
+
+
+## Details of our cloud server
+
+- http://com3505.gate.ac.uk:9191/com3505?...data...
+- data format: key=value, e.g.: email=hamish@gate.ac.uk
+- it requires a .ac.uk email address, and a MAC address
+- so to send your email to our server do:
+  http://com3505.gate.ac.uk:9191/com3505?email=me@sheffield.ac.uk&mac=123
+
+
+# Reading
+
+- _Opportunities and Challenges in the IoT_, a converstaion with Cory Doctorow
+  and Tim O'Reilly
+  http://www.oreilly.com/iot/free/iot-opportunities-challenges.csp
+- _The Epic Struggle for the Internet of Things_, Bruce Sterling
+  https://www.courses.tegabrain.com/SS15/wp-content/uploads/2015/01/BruceSterlineIoT.pdf
+- _Adafruit.io_, Justin Cooper https://learn.adafruit.com/adafruit-io?view=all
+- _Discussion Paper on the Internet of Things_, Anzelmo, Bassi, Caprio,
+  Dodson, van Kranenburg, Ratto https://goo.gl/WESrCh
