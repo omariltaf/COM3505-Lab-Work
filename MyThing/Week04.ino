@@ -8,7 +8,8 @@
 
 const char* ssid = "omarneville";
 const char* password = "password";
-const char HTML[] = "<form onSubmit=\"event.preventDefault()\"><label class=\"label\">Network Name</label><input type=\"text\" name=\"ssid\"/><br/><label>Password</label><input type=\"text\" name=\"pass\"/><br/><input type=\"submit\" value=\"Submit\"></form>";
+//const char HTML[] = "<form onSubmit=\"event.preventDefault()\"><label class=\"label\">Network Name</label><input type=\"text\" name=\"ssid\"/><br/><label>Password</label><input type=\"text\" name=\"pass\"/><br/><input type=\"submit\" value=\"Submit\"></form>";
+const char HTML[] = "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset='utf-8'>\n</head>\n<body>\n<form>\n  Select Network: <select name='ssid'>\n  <option value='volvo'>Volvo</option>\n  <option value='saab'>Saab</option>\n  <option value='mercedes'>Mercedes</option>\n  <option value='audi'>Audi</option>\n</select>\n  <br>Enter Password:\n  <input type='password' name='password'>\n  <br><input type='submit' value='Submit'>\n</form>\n</body>\n</html>\n";
 
 ESPWebServer webServer(80);
 

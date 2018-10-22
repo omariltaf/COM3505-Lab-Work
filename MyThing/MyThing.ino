@@ -5,8 +5,9 @@
 #include "Week02.h"
 #include "Week03.h"
 #include "Week04.h"
+#include "Week05.h"
 
-int WEEKNUM = 4; // Enter the week number
+int WEEKNUM = 5; // Enter the week number
 
 // Initialisation entry point
 void setup() {
@@ -14,6 +15,7 @@ void setup() {
     case  2: setup02(); break;
     case  3: setup03(); break;
     case  4: setup04(); break;
+    case  5: setup05(); break;
     default: Serial.println("Oops! Invalid week number");
   }
 }
@@ -24,6 +26,7 @@ void loop() {
     case  2: loop02(); break;
     case  3: loop03(); break;
     case  4: loop04(); break;
+    case  5: loop05(); break;
     default: Serial.println("Oops! Invalid week number");
   }
 }
