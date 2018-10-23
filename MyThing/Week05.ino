@@ -9,7 +9,7 @@
 const char* host = "com3505.gate.ac.uk";
 const char* networks[20];
 char buff[2046];
-char HTMLstart[] = "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset='utf-8'>\n</head>\n<body>\n<form>\n  Select Network: <select name='ssid'>\n ";
+char HTMLstart[] = "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset='utf-8'>\n</head>\n<body>\n<form action='http://192.168.4.1/submit' method = 'POST'>\n  Select Network: <select name='ssid'>\n ";
 char HTMLpart1[] = " <option value='";
 char HTMLpart2[] = "";
 char HTMLpart3[] = "'>";
@@ -172,8 +172,28 @@ void handleRootForm() {
   digitalWrite(LED_BUILTIN, 0);
 }
 
+void handleSubmit() {
+  if (webServer.hasArg("password")== false){ //Check if body received
+ 
+            webServer.send(200, "text/plain", "Body not received");
+            return;
+ 
+      }
+ 
+      String message = "connection to:\n";
+             message += webServer.arg("ssid");
+             message += "\n";
+             message += "password entered:\n";
+             message += webServer.arg("password");
+             message += "\n";
+ 
+      webServer.send(200, "text/plain", message);
+      Serial.println(message);
+}
+
 void createAP() {
   webServer.on("/", handleRootForm);
+  webServer.on("/submit", handleSubmit);
   WiFi.mode(WIFI_AP_STA);
   WiFi.softAP(ssid, password);
   
