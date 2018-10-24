@@ -180,14 +180,37 @@ void handleSubmit() {
  
       }
  
-      String message = "connection to:\n";
+      String message = "connection made to:\n";
              message += webServer.arg("ssid");
              message += "\n";
-             message += "password entered:\n";
-             message += webServer.arg("password");
-             message += "\n";
+
+             char a[20];
+             (webServer.arg("ssid")).toCharArray(a, 20);
+             char b[20];
+             (webServer.arg("password")).toCharArray(b, 20);
+             
+    
  
       webServer.send(200, "text/plain", message);
+      
+// We start by connecting to a WiFi network
+    Serial.println();
+    Serial.println();
+    Serial.print("Connecting to ");
+    Serial.println(webServer.arg(a));
+
+    WiFi.begin(a, b);
+
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(".");
+    }
+
+    Serial.println("");
+    Serial.println("WiFi connected");
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
+    
       Serial.println(message);
 }
 
