@@ -1,0 +1,193 @@
+COM3505 week 06 course notes
+===
+
+We've now covered quite a lot of ground, from blinking LEDs and reading from
+switches to getting our devices to talk to WiFi and push data into the cloud.
+Over the next week we'll give you some time to review lectures, model code and
+previous reading lists (there's no lab on Monday and no lecture next Friday),
+and to prepare for a formal assessment of your work **on Friday 2nd November
+between 1pm and 3pm in DIA 2.02**. (This assessment counts for 30% of your
+course marks.)
+
+Each team will have a 10 minute slot to demonstrate their work (which you need
+to book in advance; see below). You should turn up about 10 minutes before
+your slot and set up your work on your normal workbench. After the assessment
+please leave the lab promptly.
+
+The week after we'll give you a **mock** MOLE quiz so that you can see what to
+expect from the exam (in week 12). The mock is **on Monday 5th November at 9am
+in the NC PC room**. **NOTE:** _NC PC_ is the North Campus PC lab; enter from
+Broad Lane, turn right after the gates and it is on the ground floor of the
+big grey portacabin on your right. (Allow lots of travel time!)
+
+
+# The Lecture
+
+This week's lecture slides are here:
+https://goo.gl/WGMQyU
+
+
+# Learning Objectives
+
+Our objectives this week are to:
+
+- deepen our knowledge of IoT device provisioning,
+- introduce other networking options,
+- and understand how to provide firmware updates over network connections.
+
+
+# Assignments and Assessment
+
+You need to do three things this week:
+
+- book a slot with your GTA for the formal assessment in the lab next Friday;
+  see this spreadsheet: https://goo.gl/oCBXEC (make a comment on the sheet
+  `Assessment 1 timings`; first come first served!)
+- develop firmware for over-the-air update (OTA) on your ESP (see below; you
+  will be asked to demonstrate this working next Friday)
+- review the lecture materials before the MOLE exam a week Monday
+
+There is only one firmware exercise this week, but on this occassion you
+should include more documentation than previously, and we're providing you
+with a template to start from (in the new [MyOTAThing/](../MyOTAThing)
+directory). Tasks:
+
+- Write a design for an OTA sketch that checks our cloud server for a firmware
+  `.bin` file. (This file is pulled from a top level directory in your GitHub
+  repository called [BinFiles/](../BinFiles).) Document this design in
+  [MyOTAThing/MyOTAThing.mkd](../MyOTAThing/MyOTAThing.mkd). (You may want to
+  write some pseudocode for the main algorithm, or use other design tools that
+  you're familiar with. If you want to include images, put them in a
+  subdirectory and reference them with a relative path from your markdown
+  file.)
+- Implement and test the OTA firmware. Notes:
+    - The `MyOTAThing.ino` file includes a framework for a working solution
+      with some parts deleted; each of these parts is signalled with "TODO"
+      (as are the few configuration changes you will need to make).
+    - Your firmware should be exported from the IDE (see below) and stored in
+      a file called `BinFiles/<<version>>.bin` (e.g. `BinFiles/6.bin` for
+      version 6) and the highest version number available should be stored in
+      a file called `BinFiles/version`. In your sketch in an `int` variable
+      called `currentVersion` should be set to the current version. Declare
+      and initialise this variable on one line like this: `int currentVersion
+      = 1;` (This will allow automated checking of your firmware.)
+    - When you've pushed new versions to GitHub, our cloud server will pull
+      them and make them available over HTTP. (It takes a minute or two from
+      when you push to them becoming available on the server.) The URLs of the
+      files look like this:
+      http://com3505.gate.ac.uk/repos/com3505-labs-2018-your-gitID/BinFiles/version
+      (and your template `MyOTAThing.ino` contains helper functions to access
+      them from the ESP).
+    - Your code should check the version of the latest available firmware (via
+      the `BinFiles/version` file) and, if that version is higher than that
+      stored in `currentVersion`, do an update.
+- Return to your documentation and describe the implementation, noting any
+  changes from the design that you made and why they were necessary or useful.
+  How secure is your implementation? How might it be improved? If you wish, go
+  back and do more iterations to improve your system.
+
+Keep checking in and pushing to your repository as you iterate through design,
+development, testing and documentation phases.
+
+During the lab assessment you will be asked to add something to your sketch
+(e.g. something like `Serial.println("a distinctive string...");`) and then
+push the binary to GitHub and trigger OTA firmware update on your device.
+
+
+## Coding hints
+
+When firmware is compiled in the Arduino IDE (and elsewhere) the result is a
+`.bin` file. Normally this file is stored in `/tmp` and the IDE arranges to
+burn it to the ESP. To get a more accessible copy of this file, use
+`Cntrl&Alt&S` (or the `Sketch>Export compiled binary` menu option). For an
+example of pushing this to GitHub in the correct format see below.
+
+There are two popular libraries to help with writing OTA firmware supplied
+with your IDE: `BasicOTA` and `Update`. The former implements OTA update from
+the IDE itself: if you burn this sketch to the ESP, join whatever wifi network
+the ESP is connected to and wait a minute or three, you can then select the
+ESP device from the `Tools>Port` menu, and use `Sketch>Upload` over WiFi
+instead of serial. The latter library (`Update`) does what we need for this
+exercise, which is to check we have space on the device for another complete
+firmware binary, write that binary to flash and then, if (and only if!) all is
+well, tell the ESP to boot from that partition and do a reset.
+
+We can think about the security of OTA update from (at least) two
+perspectives:
+
+- The communication protocol between the device and the site hosting the
+  firmware. (How easy is it to listen in on that protocol? How easy would it
+  be to subvert the host site?)
+- The physical security of the device itself. (Can the user choose to allow or
+  disallow firmware updates, perhaps using a sensor attached to the ESP?)
+
+In each case a good design will make explicit the choices made (even if a
+particular implementation choice is not the most secure one possible, due to
+available time or compute resource constraints). Also, if the download was
+direct from GitHub (instead of the cloud server) over HTTPS it would be more
+secure (though note this is hard to do!). And perhaps it should only allow
+firmware updates when a switch is pressed on the device?
+
+Here's an example of pushing a new firmware version to the cloud server from
+the command line (after updating the `currentVersion` in the sketch and
+exporting the binary):
+
+```bash
+$ cd BinFiles
+$ mv ../MyOTAThing/MyOTAThing.ino.feather_esp32.bin 12.bin
+$ echo 12 >version 
+$ git add 12.bin
+add 'BinFiles/12.bin'
+$ git commit -vam 'added version firmware 12 .bin and bumped version file'
+...
+$ push
+...
+```
+
+Whenever you push files in the `BinFiles/` directory they will be copied onto
+the `com3505.gate.ac.uk` cloud server and made available for download by your
+ESP. If your team's GitHub repository was called `examplestudent`, your
+`BinFiles/version` file will become available at this URL:
+`http://com3505.gate.ac.uk/repos/com3505-labs-2018-examplestudent/BinFiles/version`.
+Your binaries we be at URLs like this:
+`http://com3505.gate.ac.uk/repos/com3505-labs-2018-examplestudent/BinFiles/12.bin`.
+Make sure that the number in the `version` file (e.g. `12`) matches the number
+of the `.bin` file, and also the `currentVersion` variable in your sketch
+code.
+
+Remember that to join the `uos-other` network you need to register your ESP's
+MAC address first via https://www.sheffield.ac.uk/cics/wireless/other
+
+Lastly, there are many OTA implemetations out there to take inspiration from,
+including several bundled with your Arduino installation, e.g.
+https://github.com/espressif/arduino-esp32/blob/master/libraries/Update/examples/AWS_S3_OTA_Update/AWS_S3_OTA_Update.ino
+(which pulls the firmware down from AWS S3, but uses the same `Update` library
+that the model solution code uses). Another one is IoTAppStory.com from our
+friend Andreas Spiess: https://iotappstory.com/ (which also uses `Update`;
+source code here: https://github.com/iotappstory/ESP-Library ).
+
+
+## Marking scheme
+
+In addition to the comments in the [main marking scheme
+document](marking-scheme.mkd), we will allocate marks for this exercise as
+follows:
+
+- Documentation
+    - Design
+    - Implementation and testing
+- Code
+    - Functionality
+    - Security 
+    - Style and comments
+- Operation
+    - Did it work in the lab?
+    - Did it work in our automated test suite?
+
+Regarding functionality marks will be awarded for both OTA elements and for
+additional elements that you may decide are appropriate. For example, the
+`Thing/Ex09` model solution fires up a wifi access point and web server, and
+allows the user to join the access point and configure which network they want
+the ESP to join. This would be useful to add to your `MyOTAThing`. You might
+also want to do extra work on securing the process (see above) or adding other
+useful functionality.

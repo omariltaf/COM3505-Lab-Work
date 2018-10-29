@@ -1,0 +1,5 @@
+Exercise 10: OTA update via GitHub
+===
+
+Write documentation of your design for the OTA sketch here, and subsequently
+document your implementation.

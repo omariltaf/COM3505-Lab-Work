@@ -23,7 +23,7 @@ falls somewhere between these two extremes!
 
 In weeks 6 and 12 each pair demonstrates their work to the teaching staff
 during two formal lab assessment sessions. The first of these covers exercises
-from the first half of term, and the second covers project work.
+based on the first half of term, and the second covers project work.
 
 (Note: during weeks 1 to 5 and 7 to 11 we **do not** mark your work, but we do
 record data about how the labs are going, how people find the exercises, what
@@ -67,8 +67,7 @@ what distribution of effort they believe to be fair (e.g. 60-40 or 70-30 or
 etc.).
 
 **Also note** that model solutions to the weekly assignments are published at
-the end of each week (up to two hours before the lecture). It is fine to build
-on these solutions in subsequent weeks. Therefore it is not a requirement that
-you are successful in all of each week's assigments: if something proves too
-difficult make your best attempt, then can catch up based on the model
-solution in subsequent weeks.
+the end of each week. It is fine to build on these solutions in subsequent
+weeks. Therefore it is not a requirement that you are successful in all of
+each week's assigments: if something proves too difficult make your best
+attempt, then can catch up based on the model solution in subsequent weeks.
