@@ -12,8 +12,8 @@
 // OTA stuff ////////////////////////////////////////////////////////////////
 int doCloudGet(HTTPClient *, String, String); // helper for downloading 'ware
 void doOTAUpdate();                           // main OTA logic
-int currentVersion = 1; // TODO keep up-to-date! (used to check for updates)
-String gitID = "anotherexamplestudent"; // TODO change to your team's git ID
+int currentVersion = 2; // TODO keep up-to-date! (used to check for updates)
+String gitID = "omariltaf"; // TODO change to your team's git ID
 
 // MAC and IP helpers ///////////////////////////////////////////////////////
 char MAC_ADDRESS[13]; // MAC addresses are 12 chars, plus the NULL terminator
@@ -25,6 +25,10 @@ void ledOn();
 void ledOff();
 void blink(int = 1, int = 300);
 int loopIteration = 0;
+
+// WiFi Details ///////////////////////////////////////////////
+const char* ssid = "uos-other";
+const char* password = "shefotherkey05";
 
 // SETUP: initialisation entry point ////////////////////////////////////////
 void setup() {
@@ -40,6 +44,7 @@ void setup() {
       WiFi.begin("uos-other", "shefotherkey05"); // TODO register MAC first!
   You'll then need to wait until the wifi status is WL_CONNECTED
   */
+  connect();
 
   // check for and perform firmware updates as needed
   doOTAUpdate();
@@ -98,6 +103,8 @@ void doOTAUpdate() {             // the main OTA logic
   needed are Update.end, Update.isFinished and Update.getError. When an update
   has been performed correctly, you can restart the device via ESP.restart().
   */
+  getBin(highestAvailableVersion);
+  
 }
 
 // helper for downloading from cloud firmware server via HTTP GET
@@ -113,6 +120,29 @@ int doCloudGet(HTTPClient *http, String gitID, String fileName) {
   http->begin(url);
   http->addHeader("User-Agent", "ESP32");
   return http->GET();
+}
+
+// get bin file
+void getBin(int highestAvailableVersion) {
+  HTTPClient http; // manage the HTTP request process
+  int respCode;    // the response code from the request (e.g. 404, 200, ...)
+
+  // do a GET to read the version file from the cloud
+  Serial.println("checking for firmware updates...");
+  String fileName = String(highestAvailableVersion) + ".bin";
+  respCode = doCloudGet(&http, gitID, fileName);
+  if(respCode == 200) // check response code (-ve on failure)
+//    highestAvailableVersion = atoi(http.getString().c_str());
+    Serial.println(String(http.getSize()));
+    
+  else
+    Serial.printf("couldn't get bin file! rtn code: %d\n", respCode);
+  http.end(); // free resources
+  
+  if(respCode != 200) {
+    Serial.printf("cannot get bin file\n\n");
+    return;
+  }
 }
 
 // misc utilities //////////////////////////////////////////////////////////
@@ -146,3 +176,24 @@ String ip2str(IPAddress address) {
     String(address[0]) + "." + String(address[1]) + "." +
     String(address[2]) + "." + String(address[3]);
 }
+
+// connect to WiFi
+void connect() {
+  Serial.println();
+  Serial.println();
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
+
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+}
+
