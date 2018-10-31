@@ -3,13 +3,19 @@ Design:
 
 The following is the documentation involving the design of our OTA update system:
 
-![](images/design.png)
+![](images/designCurrent.png)
+
+1. fig 1.0. final design
 
 The program was created to connect to a Wi-Fi service specified in the program code. this is then followed by the program requesting resources from the cloud server also described in the code. In this case the point of the request is to access information from the bin folder of the directory in the cloud server being accessed. This bin folder is to contain two types of files. First is a version file which contains the number of the current version program. the second is a bin file named as follows: " version number ".bin.
 
 The request is first used to check the version number on the version file. If the version file is greater than the current version of the running program then the .bin file is used to perform the update. the update process involved looking if the local memory had enough space to download the update.
 
 If enough space is found on the local storage then the .bin file is downloaded and saved locally. This is where the update happens from. If the local copy is created successfully then the update can continue. However, if the local copy is not successfully created, the process needs to be repeated from checking the memory. All the loops in our program have been limited to three times before an error is returned so as to have an efficient program.
+
+![](images/designPrevious.png)
+
+2. fig 2.0. original design
 
 Pseudocode:
 ---
