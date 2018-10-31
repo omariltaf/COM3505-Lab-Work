@@ -28,8 +28,8 @@ void blink(int = 1, int = 300);
 int loopIteration = 0;
 
 // WiFi Details ///////////////////////////////////////////////
-const char* ssid = "WeeFee";
-const char* password = "password";
+const char* ssid = "uos-other";
+const char* password = "shefotherkey05";
 
 // SETUP: initialisation entry point ////////////////////////////////////////
 void setup() {
@@ -55,9 +55,10 @@ void setup() {
 void loop() {
   int sliceSize = 500000;
   loopIteration++;
-  if(loopIteration % sliceSize == 0) // a slice every sliceSize iterations
-    Serial.println("OTA loop");
+  if(loopIteration % sliceSize == 0) { // a slice every sliceSize iterations
+//    Serial.println("OTA loop");
     Serial.println("I am version " + String(currentVersion));
+  }
 
   // do other useful stuff here...?
 }
