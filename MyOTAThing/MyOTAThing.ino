@@ -14,6 +14,7 @@ int doCloudGet(HTTPClient *, String, String); // helper for downloading 'ware
 void doOTAUpdate();                           // main OTA logic
 int currentVersion = 2; // TODO keep up-to-date! (used to check for updates)
 String gitID = "omariltaf"; // TODO change to your team's git ID
+String host = "com3505.gate.ac.uk";
 
 // MAC and IP helpers ///////////////////////////////////////////////////////
 char MAC_ADDRESS[13]; // MAC addresses are 12 chars, plus the NULL terminator
@@ -27,8 +28,8 @@ void blink(int = 1, int = 300);
 int loopIteration = 0;
 
 // WiFi Details ///////////////////////////////////////////////
-const char* ssid = "uos-other";
-const char* password = "shefotherkey05";
+const char* ssid = "WeeFee";
+const char* password = "password";
 
 // SETUP: initialisation entry point ////////////////////////////////////////
 void setup() {
@@ -56,6 +57,7 @@ void loop() {
   loopIteration++;
   if(loopIteration % sliceSize == 0) // a slice every sliceSize iterations
     Serial.println("OTA loop");
+    Serial.println("I am version " + String(currentVersion));
 
   // do other useful stuff here...?
 }
@@ -131,10 +133,49 @@ void getBin(int highestAvailableVersion) {
   Serial.println("checking for firmware updates...");
   String fileName = String(highestAvailableVersion) + ".bin";
   respCode = doCloudGet(&http, gitID, fileName);
-  if(respCode == 200) // check response code (-ve on failure)
-//    highestAvailableVersion = atoi(http.getString().c_str());
-    Serial.println(String(http.getSize()));
-    
+  if(respCode == 200) { // check response code (-ve on failure)
+    WiFiClient httpStream = http.getStream();
+    int contentLength = http.getSize();
+    Serial.println(String(contentLength));
+    if (contentLength) {
+      // Check if there is enough to OTA Update
+      bool canBegin = Update.begin(contentLength);
+      
+      // If yes, begin
+      if (canBegin) {
+        Serial.println("Begin OTA. This may take 2 - 5 mins to complete. Things might be quite for a while.. Patience!");
+        // No activity would appear on the Serial monitor
+        // So be patient. This may take 2 - 5mins to complete
+        size_t written = Update.writeStream(httpStream);
+        
+        if (written == contentLength) {
+          Serial.println("Written : " + String(written) + " successfully");
+          } else {
+            Serial.println("Written only : " + String(written) + "/" + String(contentLength) + ". Retry?" );
+            // retry??
+            // execOTA();
+            }
+
+      if (Update.end()) {
+        Serial.println("OTA done!");
+        if (Update.isFinished()) {
+          Serial.println("Update successfully completed. Rebooting.");
+          ESP.restart();
+        } else {
+          Serial.println("Update not finished? Something went wrong!");
+        }
+      } else {
+        Serial.println("Error Occurred. Error #: " + String(Update.getError()));
+      }
+    } else {
+      // not enough space to begin OTA
+      // Understand the partitions and
+      // space availability
+      Serial.println("Not enough space to begin OTA");
+      httpStream.flush();
+    }
+    }
+  }
   else
     Serial.printf("couldn't get bin file! rtn code: %d\n", respCode);
   http.end(); // free resources
@@ -196,4 +237,3 @@ void connect() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 }
-
