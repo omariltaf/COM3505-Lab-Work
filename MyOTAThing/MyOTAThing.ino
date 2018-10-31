@@ -12,9 +12,10 @@
 // OTA stuff ////////////////////////////////////////////////////////////////
 int doCloudGet(HTTPClient *, String, String); // helper for downloading 'ware
 void doOTAUpdate();                           // main OTA logic
-int currentVersion = 2; // TODO keep up-to-date! (used to check for updates)
+int currentVersion = 4; // TODO keep up-to-date! (used to check for updates)
 String gitID = "omariltaf"; // TODO change to your team's git ID
 String host = "com3505.gate.ac.uk";
+bool updateSuccess;
 
 // MAC and IP helpers ///////////////////////////////////////////////////////
 char MAC_ADDRESS[13]; // MAC addresses are 12 chars, plus the NULL terminator
@@ -28,12 +29,13 @@ void blink(int = 1, int = 300);
 int loopIteration = 0;
 
 // WiFi Details ///////////////////////////////////////////////
-const char* ssid = "uos-other";
-const char* password = "shefotherkey05";
+const char* ssid = "WeeFee";
+const char* password = "password";
 
 // SETUP: initialisation entry point ////////////////////////////////////////
 void setup() {
   Serial.begin(115200);         // initialise the serial line
+  Serial.println("**********************************************************");
   getMAC(MAC_ADDRESS);          // store the MAC address
   Serial.printf("\nMyOTAThing setup...\nESP32 MAC = %s\n", MAC_ADDRESS);
   Serial.printf("firmware is at version %d\n", currentVersion);
@@ -106,8 +108,14 @@ void doOTAUpdate() {             // the main OTA logic
   needed are Update.end, Update.isFinished and Update.getError. When an update
   has been performed correctly, you can restart the device via ESP.restart().
   */
-  getBin(highestAvailableVersion);
-  
+  updateSuccess = false;
+  for(int i = 0; i < 3; i++) {
+    if (!updateSuccess) {
+      Serial.println("Update attempt #" + String(i + 1));
+      getBin(highestAvailableVersion);
+      delay(1000);
+    }
+  }
 }
 
 // helper for downloading from cloud firmware server via HTTP GET
@@ -161,12 +169,15 @@ void getBin(int highestAvailableVersion) {
         Serial.println("OTA done!");
         if (Update.isFinished()) {
           Serial.println("Update successfully completed. Rebooting.");
+          updateSuccess = true;
           ESP.restart();
         } else {
           Serial.println("Update not finished? Something went wrong!");
+          updateSuccess = false;
         }
       } else {
         Serial.println("Error Occurred. Error #: " + String(Update.getError()));
+        updateSuccess = false;
       }
     } else {
       // not enough space to begin OTA
