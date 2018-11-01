@@ -109,6 +109,7 @@ void doOTAUpdate() {             // the main OTA logic
   has been performed correctly, you can restart the device via ESP.restart().
   */
   updateSuccess = false;
+  // attempts to get the update 3 times before running the current firmware
   for(int i = 0; i < 3; i++) {
     if (!updateSuccess) {
       Serial.println("Update attempt #" + String(i + 1));
@@ -133,21 +134,23 @@ int doCloudGet(HTTPClient *http, String gitID, String fileName) {
   return http->GET();
 }
 
-// get bin file
+// get bin file from specified cloud server
 void getBin(int highestAvailableVersion) {
   HTTPClient http; // manage the HTTP request process
   int respCode;    // the response code from the request (e.g. 404, 200, ...)
 
   // do a GET to read the version file from the cloud
   Serial.println("checking for firmware updates...");
+  // form the appropriate filename
   String fileName = String(highestAvailableVersion) + ".bin";
   respCode = doCloudGet(&http, gitID, fileName);
   if(respCode == 200) { // check response code (-ve on failure)
     WiFiClient httpStream = http.getStream();
+    // get the size of the file
     int contentLength = http.getSize();
     Serial.println(String(contentLength));
     if (contentLength) {
-      // Check if there is enough to OTA Update
+      // Check if there is enough space to perform OTA Update
       bool canBegin = Update.begin(contentLength);
       
       // If yes, begin
@@ -156,7 +159,7 @@ void getBin(int highestAvailableVersion) {
         // No activity would appear on the Serial monitor
         // So be patient. This may take 2 - 5mins to complete
         size_t written = Update.writeStream(httpStream);
-        
+        // checks if complete file has been written to device
         if (written == contentLength) {
           Serial.println("Written : " + String(written) + " successfully");
           } else {
@@ -164,7 +167,7 @@ void getBin(int highestAvailableVersion) {
             // retry??
             // execOTA();
             }
-
+      // checks if update process is successful and if so, reboots device
       if (Update.end()) {
         Serial.println("OTA done!");
         if (Update.isFinished()) {
