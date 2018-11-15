@@ -12,7 +12,7 @@
 // OTA stuff ////////////////////////////////////////////////////////////////
 int doCloudGet(HTTPClient *, String, String); // helper for downloading 'ware
 void doOTAUpdate();                           // main OTA logic
-int currentVersion = 4; // TODO keep up-to-date! (used to check for updates)
+int currentVersion = 20; // TODO keep up-to-date! (used to check for updates)
 String gitID = "omariltaf"; // TODO change to your team's git ID
 String host = "com3505.gate.ac.uk";
 bool updateSuccess;

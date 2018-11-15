@@ -1,0 +1,113 @@
+COM3505 week 08 course notes
+===
+
+# The Lecture
+
+This week's lecture slides are here: https://goo.gl/dowHPH
+
+
+# NOTE...
+
+We'll be using **LiPo** batteries from next week -- please **review the safety
+instructions** below and be sure to follow them. If in doubt ask a member of
+staff.
+
+
+# Learning Objectives
+
+Our objectives this week are to:
+
+- look in detail at the process of developing a new IoT device
+- start programming on the unPhone
+- start thinking about project choices
+- learn about cloud-side IoT systems
+
+
+# Assignments and Assessment
+
+Your github repository will now contain:
+
+- `TouchPaintThing`, a sketch which illustrates the use of the unPhone's touch
+  screen and LCD display (and the power management chip). Have a play with it!
+- `MyEtchAThing`, a template for a simple Etch-A-Sketch like game on the
+  unPhone. See the **TODO** comment, and add code to make the sketch work.
+- Review the lecture slides on project options, and think about which project
+  you want to do in your team.
+
+## Coding Hints
+
+We're using Adafruit's graphics library to draw on the LCD screen, see:
+https://learn.adafruit.com/adafruit-gfx-graphics-library?view=all
+
+The touch screen uses the STMPE610 library; there's a description and original
+demo version of `TouchPaintThing` here:
+https://learn.adafruit.com/adafruit-2-4-tft-touch-screen-featherwing?view=all#resistive-touch-screen
+
+
+# Reading
+
+Following on from the work we did in the last couple of weeks (on provisioning
+and over-the-air updates), have a look at these:
+
+- _Challenges with Wi-Fi Provisioning for Embedded Systems_
+  http://www.argenox.com/library/challenges-with-wi-fi-provisioning-for-embedded-systems/
+- _A Crash Course In Provisioning Wireless Networks_
+  https://www.link-labs.com/blog/provisioning-wireless-networks
+- _ESP32 vs. other industrial IoT microcontrollers_
+  http://uhurumkate.blogspot.com/2017/09/esp32-as-professional-gradeindustry-40.html
+
+
+# LiPo Safety
+
+## What are lithium polymer batteries?
+
+Lithium Polymer (or LiPo) cells are one of the most effective commercially
+available rechargeable batteries, having high energy and power density. These
+batteries are used in all manner of mobile applications and are particularly
+popular with remote control (RC) hobbyists.
+
+You will be given a LiPo battery in the second half of term as part of the
+ESP32 project hardware for COM3505. The battery is inside a case with the
+other electronics, but is potentially dangerous if the case is damaged or
+removed.
+
+## What are the dangers?
+
+Although these cells are very useful, they can be dangerous when mistreated or
+misused. There are three main causes of cell failure: puncture, over-heating
+and over-charging. If the battery fails as a result of any of these, hazardous
+electrolyte leakage, fire or explosions may occur.
+
+The rate of transfer of energy within the battery is strongly linked to its
+internal heat; when over-heated the cell's long term performance will degrade,
+more energy is released and the battery gets hotter, creating a dangerous
+feedback loop. If this continues the electrolyte will vaporise and cause the
+battery to expand, which may lead to fire or even an explosion.
+
+This same effect can be caused by over-charging the battery, or in some cases
+even just leaving it charged in the wrong circumstances. Henry (one of our
+previous teaching assistants on the course) used to fly an RC helicopter that
+ran off a multi-cell LiPo pack. Having forgotten to discharge it, it was left
+in a container in his shed. Many months later the cell exploded in a ball of
+flame nearly burning down the shed!
+
+The sensitive chemistry of the batteries can also lead to fire if the battery
+gets punctured and vents into the air.
+
+## Avoiding problems
+
+**ALWAYS** take the following precautions when using LiPos in COM3505:
+
+- Only use the battery as installed in the hardware we gave you.
+- Only charge the battery using the board which we gave you.
+- Regularly inspect the hardware, especially if you need to open the case to
+  make connections; check the battery visually for damage, heating or possible
+  puncture. If you spot anything potentially problematic inform a member of
+  staff immediately.
+- If a battery becomes hot:
+    - if it appears safe to do so, unplug it from the power source
+    - warn others present to move away from the battery and do so yourself
+    - inform a member of staff immediately
+- If you are at all unsure of any of these instructions please inform a member
+  of staff.
+- See also https://goo.gl/HyrxFb
