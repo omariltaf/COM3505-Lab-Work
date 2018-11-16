@@ -38,17 +38,17 @@ byte BM_Version  = 0x0a; // Vender / Part / Revision Status Register
 // LoRaWAN NwkSKey, network session key
 // This is a dummy key, which should be replaced by your individual key
 // Copy from ttn device overview webpage - Network Session Key - msb format
-static const PROGMEM u1_t NWKSKEY[16] = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+static const PROGMEM u1_t NWKSKEY[16] = { 0x6A, 0x65, 0x49, 0x77, 0xCC, 0x7F, 0xC3, 0xD8, 0x8C, 0x33, 0xD4, 0xDE, 0x82, 0x8A, 0x77, 0xE8 };
 
 // LoRaWAN AppSKey, application session key
 // This is a dummy key, which should be replaced by your individual key
 // Copy from ttn device overview webpage - App Session Key - msb format
-static const u1_t PROGMEM APPSKEY[16] = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+static const u1_t PROGMEM APPSKEY[16] = { 0x8C, 0x77, 0xBC, 0xCE, 0xE4, 0xB9, 0x84, 0x48, 0xC4, 0x8D, 0x01, 0xD6, 0x13, 0xAD, 0x6C, 0x9F };
 
 // LoRaWAN end-device address (DevAddr)
 // This is a dummy key, which should be replaced by your individual key
 // Copy from ttn device overview webpage - Device Address - msb format
-static const u4_t DEVADDR = 0x00000000 ;
+static const u4_t DEVADDR = 0x260112F9 ;
 
 // These callbacks are only used in over-the-air activation, so they are
 // left empty here (we cannot leave them out completely unless
