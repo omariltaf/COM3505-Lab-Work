@@ -1,0 +1,126 @@
+COM3505 week 09 course notes
+===
+
+# The Lecture
+
+This week's lecture slides are here: https://goo.gl/79Ef6B
+
+
+# Learning Objectives
+
+Our objectives this week are to:
+
+- understand more of the alternatives for connecting IoT devices to networks,
+  including the differences between WiFi and LPWan (low power WAN) protocols
+- choose end of term projects
+- experiment with firmware for LoRaWAN, using the Things Network and IFTTT
+  integration
+
+
+# Assignments and Assessment
+
+Your github repository will now contain:
+
+- `unPhoneThing`, a rough-and-ready test rig for the unPhone
+- `LoRaWANThing`, a sketch for sending data to the Things Network (TTN)
+
+Your tasks for this week are:
+
+- configure the `LoRaWANThing` sketch to talk to your own TTN account, and get
+  that account to trigger an IFTTT notification
+- figure out which project you want to do, and sign up for it on Monday at 9am
+  in the NC PC lab
+
+
+## Coding Hints / Configuration Instructions
+
+### The IBM LMIC (LoraMAC-in-C) Library
+
+The unPhone LoRaWAN module requires a modified version of the LMIC library,
+which is now installed on the lab machines. If you're using your own machine,
+you need to copy it into your `Arduino/libraries` directory. I've pushed a
+copy of the LMIC tree to `lmic` in your repositories for this purpose.
+
+
+### Talking to TTN, Triggering IFTTT
+
+Create an account on https://ifttt.com and download the app for your phone,
+log into your new IFTTT account on the app. (If you don't have a smart phone
+or prefer to use a computer, this will all work on a web browser instead,
+though you will then need to use twitter or email integration to send
+notifications.)
+
+Create a New Applet in IFTTT, click on the `+this` and choose `webhooks`.
+Click on the blue box `Receive webhook` and enter an event name like
+`unphone`. Click on the `create trigger` button.
+
+Now click on the `+that` part of the screen to configure the action. Search
+for notifications and click the bell icon (if you're using the smart phone
+app; if not, click on e.g. gmail or twitter). Choose the `Send a notification
+from the IFTTT app` option, and click on the `Create action` button. Click the
+`finish` button to create the applet.
+
+Now click on the webhooks word where it is to the right of `My Applets` - or
+you can navigate to the page https://ifttt.com/maker_webhooks. Then click on
+the documentation button to show your personal key - leave this page open as
+you will need this to connect to the things network.
+
+Now go to https://www.thethingsnetwork.org/ and sign up for an account. Once
+that is created and you have logged in, click on your account in the top right
+of the screen and go to console. Click on applications and then `add
+application`.
+
+Give your application a name like `myapp` or something more imaginative if you
+like. You can add a description to help you remember what the application
+does. The EUI is created automatically and the handler should be set to
+`ttn-handler-eu`. Hit the `add application` button.
+
+Now you should be looking at the overview page for your new application - go
+to the devices tab and click on `register device`. Give your device a `Device
+ID` like `myunphone` or better, and click on the icon in the `Device EUI`
+field to have it generated for you. The other fields will also be generated
+for us. Click on the `register` button to create your device.
+
+Now we need to set our device to use the ABP activation method - so go into the settings
+and choose `ABP` as the `Activation Method` and then click `Save`.
+
+Now we need to copy the three keys from the ttn device overview into the
+firmware for the device (using `LoRaWANThing.ino` in your repository). Next to
+`Network Session Key` click on the `<>` button to see the key in C format. Copy this array
+of numbers into the `LoRaWANThing.ino` sketch where the `NWKSKEY` is defined,
+replacing the default array of zeros. It looks like this:
+
+```C
+static const PROGMEM u1_t NWKSKEY[16] =
+  { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+```
+
+Repeat this for the `App Session Key`, copying this into the `APPSKEY`
+definition. Finally do the same for the `Device Address` - except this time
+just copy it without clicking on the `<>` button. For example:
+
+```C
+static const u4_t DEVADDR = 0x00000000 ;
+```
+
+You should see that the keys you are replacing have the same formats as the
+keys you have created. With these three keys copied into your sketch it should
+now be able to send a message using LoRaWAN.
+
+The last step is to join the application receiving data on the things network
+with the IFTTT applet. Click on the name of your application (where it appears
+near the top of the page in the navigation breadcrumbs) to get to the
+application overview page on the things network console webpage. Click on
+`integrations`, then `add integration`, then choose `IFTTT maker`. For
+`process ID` you can give any name. For `event name` give the exact name you
+used to create the applet in IFTTT - for example `unphone`. Now you need to
+copy the key from the IFTTT page we opened earlier into your TTN integration
+`Key` field.
+
+Once you click `Add integration` (and when you've burned LoRaWANThing to your
+unPhone) - your phone's IFTTT app (or email or twitter according to what you
+chose) should notify you every minute or so as messages are sent from your
+code via LoRaWAN to a nearby gateway, then to a ttn application, via an
+integration to the IFTTT service, and from their to the TTN app on your phone.
+
+Simple, right?
