@@ -1,7 +1,83 @@
-Exercise 10: OTA update via GitHub
+Design:
 ===
 
+<<<<<<< HEAD
 Write documentation of your design for the OTA sketch here, and subsequently
 document your implementation.
 
 ![](image/design.png)
+=======
+The following is the documentation involving the design of our OTA update system:
+
+![](images/designCurrent.png)
+
+1. fig 1.0. final design
+
+The program was created to connect to a Wi-Fi service specified in the program code. this is then followed by the program requesting resources from the cloud server also described in the code. In this case the point of the request is to access information from the bin folder of the directory in the cloud server being accessed. This bin folder is to contain two types of files. First is a version file which contains the number of the current version program. the second is a bin file named as follows: " version number ".bin.
+
+The request is first used to check the version number on the version file. If the version file is greater than the current version of the running program then the .bin file is used to perform the update. the update process involved looking if the local memory had enough space to download the update.
+
+If enough space is found on the local storage then the .bin file is downloaded and saved locally. This is where the update happens from. If the local copy is created successfully then the update can continue. However, if the local copy is not successfully created, the process needs to be repeated from checking the memory. All the loops in our program have been limited to three times before an error is returned so as to have an efficient program.
+
+![](images/designPrevious.png)
+
+2. fig 2.0. original design
+
+Pseudocode:
+---
+
+start
+
+  var connected = false
+
+  var current
+
+  while(!connected)
+
+    connect to Wi-Fi
+
+  end
+
+  if (connected)
+
+    version = get version from cloud server
+    if version > current
+      if ( local space > .bin file space )
+        download to local memory.
+        if download is successful
+          update to new version
+          counter = 0
+          if update is successful && counter < 3
+            restart the program
+          else
+            counter += 1
+            restart the update process
+          end
+        else
+          restart the download
+        end    
+      else
+        return error
+      end
+    end  
+
+end
+
+***
+
+Implementation:
+===
+The following is the documentation involving the implementation of our OTA update system:
+
+The code was completed using C++ programming language, supported by the Arduino development platform.
+
+With reference from the example templates available on the Arduino IDE, and hints from the previous exercises completed before this assignment, as well as the one given from this weeks assignment, we were able to complete the work as follows:
+
+1. First we connected to the internet using the code we had previously completed .
+
+2. As soon as that was working we created a HTTP Request to the cloud server specified in the assignment.
+
+3. We Tested that the request was working by changing the version file and putting in a number that was greater than the current version of the running program.
+
+4. We created a .bin file to start working with the update function.
+>>>>>>> 952427d17c32165a05793dcb0fcc12e3cfaef60c
