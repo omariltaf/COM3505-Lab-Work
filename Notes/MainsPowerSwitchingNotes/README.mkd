@@ -1,0 +1,94 @@
+COM3505 Remote Control Power Sockets
+===
+
+The actuator we are using is a radio transmitter circuit that uses the 433MHz
+frequency:
+
+![433MHz transmitter](F6172072-01.jpg  "433MHz transmitter")
+
+This is part of the ISM band of frequencies that consumer electronic devices
+can use without license - in our case we are using electric sockets that
+switch on and off in response to codes issued on that frequency:
+
+![433MHz mains socket](PL15027-40l.jpg  "433MHz mains socket")
+
+By using a radio-controlled mains socket we cunningly avoid having to
+interface directly with the mains. Being able to switch a mains powered device
+such as a light, fan, heater etc. opens up the possibilities of control
+greatly - hopefully it's already giving you some ideas...
+
+![Power Socket circuit schematic](Power-socket-schematic.png  "Power Socket
+circuit schematic")
+
+As you can see from the schematic we can just connect the transmitter without
+needing any additional components. This transmitter is designed to operate at
+5V - but it does work at 3.3V with a reduced range. If you want to use this
+transmitter on batteries, you'll need to use the 3V power instead as the 5V is
+only available whilst connected to USB. The schematic above shows the power
+line VCC connected to the 5V VBUS - if you were using it on batteries then
+you'd connect to the 3.3V pin instead.
+
+Soldering the transmitter into the expander should look something like this:
+
+![Expander and 433MHz transmitter](Expander_and_433_closer.jpg) 
+
+Here I've soldered wires into the holes just in front of the ones for the
+transmitter. On the expander the prototype holes aren't connected to each
+other, so on the back I made sure the wires connected to the pins of the
+transmitter:
+
+![Expander bottom showing 433MHz
+connections](Expander_bottom_showing_433_connections.jpg) 
+
+The sockets come in packs of three and with a single push button remote
+control. 8 different sets of codes are used to signal to the sockets so that
+you can use more than three sockets in one location. The sockets are
+programmed to match the remote (which can't be changed), but can also be
+re-programmed to change the code they respond to. For approx. 3 seconds when
+power is applied, the socket is in learning mode; if a control code is
+broadcast during this period the socket will learn this code and begin
+responding. If no code is recieved during the first 3 seconds, the socket goes
+into normal mode and responds to the last code learned. Each socket code has
+an 'on' command and an 'off' command - there seems to be no other commands and
+no feedback - so no ability to read the status of the socket for example.
+
+You can initialise the handy RC Switch library like thus:
+
+```C
+#include <RCSwitch.h>
+RCSwitch mySwitch = RCSwitch();
+```
+
+Then a couple of setup configurations:
+
+```C
+// Transmitter is connected to esp32 Pin #12
+mySwitch.enableTransmit();
+  
+// We need to set pulse length as it's different from default
+mySwitch.setPulseLength(175);
+```
+ 
+Now we can send a command to the switch:
+
+```C
+mySwitch.send(4281651, 24);
+```
+ 
+I've mapped out the codes for all 8 sets of sockets
+[here:](Power-socket-codes.csv)
+ 
+Without an antenna the range of the transmitter is only a meter or so; but a
+simple arial can be made with a piece of wire. Using this ariel range can
+often reach 20-30m and usually can work through walls and ceilings.
+Instructions can be found
+[here](https://github.com/hamishcunningham/fishy-wifi/blob/master/build_doc/How-to-make-a-Air-Cooled-433MHz-antenna.pdf)
+(credit: Ben Schueler).
+ 
+ ![Ariel](ariel.png  "Ariel")
+
+Once you've made your ariel you should solder it so it connects with the pin
+on the right of the transmitter - marked 'ANT' so it will look something like
+this:
+
+![Expander with ariel](Expander_with_ariel.jpg) 

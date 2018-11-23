@@ -1,0 +1,4 @@
+Predictor: predictive text for low memory devices
+===
+
+Adapted from Mark Hepple's original Python library -- thanks Mark!

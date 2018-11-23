@@ -1,12 +1,6 @@
 Design:
 ===
 
-<<<<<<< HEAD
-Write documentation of your design for the OTA sketch here, and subsequently
-document your implementation.
-
-![](image/design.png)
-=======
 The following is the documentation involving the design of our OTA update system:
 
 ![](images/designCurrent.png)
@@ -80,4 +74,3 @@ With reference from the example templates available on the Arduino IDE, and hint
 3. We Tested that the request was working by changing the version file and putting in a number that was greater than the current version of the running program.
 
 4. We created a .bin file to start working with the update function.
->>>>>>> 952427d17c32165a05793dcb0fcc12e3cfaef60c

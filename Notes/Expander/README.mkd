@@ -1,0 +1,45 @@
+unPhone Expander Board
+===
+
+**Build instructions**
+
+If you want to attach an additional FeatherWing to the unPhone (e.g. the motor
+drive board for the RoboCar) or wire up additional sensors or actuators (e.g.
+a dust sensor or an LED array) you'll need to use the expander board.
+
+Start by getting the pieces out and working out what goes where:
+
+![Unphone expander kit contents](Expander_unassembled.jpg)
+
+First put two of the headers in the central white areas on the top of the
+board like this:
+
+![Unphone expander with headers](Expander_with_headers.jpg)
+
+Then on the other side start by soldering just one pin on each header, this
+gives you a chance to make sure they are straight and not wonky!
+
+![Unphone expander with two pins soldered](Expander_begining_soldering.jpg) 
+
+So if you have headers at an angle like this:
+
+![Unphone expander with wonky headers](Expander_with_wonky_headers.jpg)
+
+then melt the solder and straighten them! Once you have them straight you can
+solder the other pins.
+
+To connect the flat flex cable (ffc) to the expander board you flip the little
+black flap at the front of the connector upwards, then push the cable into the
+opening so it remains straight, then flip the black flap back downwards.
+
+![](Expander_connect_ffc_1.jpg) ![](Expander_connect_ffc_2.jpg)
+![](Expander_connect_ffc_3.jpg) ![](Expander_connect_ffc_4.jpg)
+
+These little connectors are a bit fiddly and if you apply too much force you
+risk breaking them - but with a little care they can be used reliably. If you
+aren't feeling confident ask fellow students or us for a demonstration of how
+the connectors work.
+
+The connector on the Unphone is exactly the same - remember to have the blue
+part of the cable facing upwards on both ends!
+

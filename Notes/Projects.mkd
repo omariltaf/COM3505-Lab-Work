@@ -1,0 +1,224 @@
+unPhone Projects: Design, Build, Demo
+===
+
+Now you've chosen a project you need to start:
+
+- documenting your design
+- building any extra hardware that is needed
+- working on the firmware
+- thinking about how you will demo the project in week 12
+
+If you need extra lab time for the hardware build note that soldering and etc.
+facilities are available in the iForge, that the DIA 2.02 lab should be
+available on Wednesday afternoons (after 3pm if not before), and that LoRaWAN
+is available in the Lewin lab and DIA 2.02 (and in the corridor outside
+Hamish's office, but camping there may result in getting some strange looks :)
+Seriously, the transceiver in G28A is visible from some distance; give it a
+try and see!).
+
+**For the hardware**, we now have the cases, LiPo batteries, NeoPixel LEDs, IR
+sensors, and this and that. These will be handed out in the lecture on Friday.
+
+**For the firmware**, your repository now contains:
+
+- `MyProjectThing`, a template for your firmware, that contains examples of
+  all the unPhone modules in operation, and a `MyProjectThing.mkd` file for
+  your documentation; note that out of the box the sketch is configured to
+  kick the tyres on all the modules, and allow stepping through tests via the
+  touch screen; change `TestScreen::activate(true);` to `false` to change this
+  behaviour.
+- a `ProjectExamples` directory, with several sketches that show how libraries
+  work for those projects using external hardware (`BigDemo`, for example,
+  includes the predictive text library; press the white arrow on screen to
+  move between functions)
+- a `libraries` directory, that contains modified libraries for on-board
+  modules that use the IOExpander (including the LMIC one we used for
+  `LoRaWANThing`), and libraries supporting the additional hardware we've
+  given out
+
+(The libraries are all updated on the Uni linux machines, but if you're using
+your own machines you'll need to copy them manually.)
+
+As before you should keep checking in and pushing to your repository as you
+iterate through design, development, testing and documentation phases.
+
+**Note** that there's an intermittent bug with some of our sketches that
+causes the IOExpander to lock up after flashing new binaries. The workaround
+is to cut power (both USB and battery) for a hard reset. If you find yourself
+hitting this frequently, it will be easier to work without the battery
+attached.
+
+
+# Build and Development Notes
+
+## Expander Board
+
+The projects that use additional hardware need to  [assemble the expander
+board](Expander/README.mkd):
+
+![Expander board for Unphone](Expander/Expander_with_headers_and_ffc.jpg) 
+
+
+## TV remote / TV-B-Gone
+
+Using the IR LEDs built in to the unPhone, start by reviewing the TV-B-Gone
+[codes and code
+inspiration](https://learn.adafruit.com/tv-b-gone-kit?view=all). We've also
+got a [light sensor](LightSensor/README.mkd) that includes an IR photodiode -
+so you can detect when the IR LED's are on!
+
+![Light sensor on expander](LightSensor/Light_sensor_expander.jpg)
+
+(We'll also use these to demo the operation of your project in the lab
+assessment.)
+
+
+## Air quality monitor
+
+This project uses three sensors to measure various aspects of [Air
+Quality](AirQuality/README.mkd):
+
+![Air Quality assembled](AirQuality/Breadboard_with_sensors.jpg)
+
+This project is relatively complex to wire up, so we've combined the unPhone
+expander with a breadboard to make it easier. You're welcome to fit the
+components directly to the expander instead if you prefer.
+
+
+## Campus panic button
+
+This project uses the unPhone and determines the location of your board using
+[Google's geolocation API](PanicButton/README.mkd). 
+
+
+## RoboCar
+    
+We are all eagerly anticipating our robot overlords! Get ahead of your fellow
+humans by [building a simple robot](RoboCar/README.mkd):
+
+![robocar front](RoboCar/robocar_front.jpg) 
+
+
+## Peer-to-Peer voting systems
+
+The [challenge with this project](P2PVoting/README.mkd) is to provide
+mechanisms to prevent vote stuffing, interception and ensure privacy of votes.
+
+
+## Home automation
+
+Control the world!! Or at least, things that plug into a mains socket... This
+project adds remote [mains power switching](MainsPowerSwitchingNotes/) to your
+unPhone using a 433 MHz transmitter:
+
+![Expander and 433MHz
+Transmitter](MainsPowerSwitchingNotes/Expander_and_433.jpg) 
+      
+
+## Dawn simulator alarm
+
+"Show me someone who is bored of LED's and I will show you someone who is
+bored of life". This project uses beautiful and useful NeoPixel LEDs to
+[simulate dawn](NeoPixel/README.mkd):
+
+![Neopixel on expander](NeoPixel/Neopixel_on_expander.jpg) 
+
+
+## MP3 player
+
+The unPhone includes a [VS1053 MP3 decoder
+chip](http://www.vlsi.fi/en/products/vs1053.html) which can also do a nice job
+of [synthesising MIDI
+input](http://www.vlsi.fi/fileadmin/software/VS10XX/vs1053mid.mp3). Store your
+`.mp3` files on the SD card that came with your unPhone (after formatting it
+to FAT), and see the example code for how to play via the headphone jack.
+
+Note that streaming audio is a blocking operation for at least one of the
+ESP32's cores, so your UI will have to find clever ways to squeeze into
+available processing power!
+
+
+## Predictive text UI
+
+See the `Predictor` examples in the `BigDemo` sketch, which is derived from
+the `predictor/` library (which was originally written by Mark Hepple -- thanks
+Mark!). Currently the UI is very basic -- can you improve it? How many words
+can you support on the ESP without running out of memory?
+
+
+## Musical instrument
+
+Using the [VS1053](http://www.vlsi.fi/en/products/vs1053.html)'s [MIDI
+synthesis](http://www.vlsi.fi/fileadmin/software/VS10XX/vs1053mid.mp3)
+capability and e.g. the accelerometer as a control mechanisms many musical
+instruments become possible.
+
+
+## Bedtime tracker
+
+Eyes drooping? C programming not seeming quite as exciting as usual? Perhaps
+you should be getting more sleep :)  How to track your screen-off shut-eye
+time and present the data back in an easy to interpret form?
+
+
+## Battleships game
+
+This is a [popular game](https://en.wikipedia.org/wiki/Battleship_(game)) with
+simple UI requirements, perfect for a connected microcontroller like the
+ESP32.
+
+
+# Kit lists
+
+The additional equipment needed for (some of the) projects is:
+
+
+## All projects with external components
+
+- unPhone expander board
+- sticky tape for attaching to back of case
+
+
+## Dawn simulator
+
+- NeoPixel LEDs
+
+
+## Home automation
+
+- 433 MHz transmitter board
+- mains socket switch
+- 30cm length of wire for ariel
+
+
+## Air Quality
+
+- Sharp dust sensor
+- MQ-135 gas sensor
+- AM2302 Humidity sensor
+- 5v boost power supply
+- 4x10k resistors
+- 2x3.3k resistors
+- 1x220R resistor
+- 1x220uF capacitor
+- Dust sensor cable
+- Breadboard
+- Jumper cables
+- 2x pin headers
+- Sticky tape
+
+
+## Robot Car
+
+- Robot chassis and motor kit
+- Motor driver feather
+- Battery box
+- 4xAA batteries
+- 4xlong pin headers
+- 4 Sticky pads
+
+
+# Assessment Notes
+
+Additional information about the marking scheme and assessment appears in
+[marking-scheme](marking-scheme.mkd).

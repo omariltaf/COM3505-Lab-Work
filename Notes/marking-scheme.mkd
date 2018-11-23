@@ -71,3 +71,55 @@ the end of each week. It is fine to build on these solutions in subsequent
 weeks. Therefore it is not a requirement that you are successful in all of
 each week's assigments: if something proves too difficult make your best
 attempt, then can catch up based on the model solution in subsequent weeks.
+(Student code repository snapshots are taken, and the model solutions are
+published, two hours or less before the lecture, so two hours before the
+lecture is the regular deadline for submission of work via `git push` to your
+repository.)
+
+
+# Lab Assessment 1, OTA (Week 6)
+
+We will allocate marks for this exercise as follows:
+
+- Documentation
+    - Design
+    - Implementation and testing
+- Code
+    - Functionality
+    - Security 
+    - Style and comments
+- Operation
+    - Did it work in the lab?
+    - Did it work in our automated test suite?
+
+Regarding functionality marks will be awarded for both OTA elements and for
+additional elements that you may decide are appropriate. For example, the
+`Thing/Ex09` model solution fires up a wifi access point and web server, and
+allows the user to join the access point and configure which network they want
+the ESP to join. This would be useful to add to your `MyOTAThing`. You might
+also want to do extra work on securing the process (see above) or adding other
+useful functionality.
+
+
+# Lab Assessment 2, Projects (Week 12)
+
+We will allocate marks for projects as follows:
+
+- Documentation
+    - Design
+    - Implementation and testing
+- Code
+    - Functionality
+    - Security 
+    - Style and comments
+- Operation
+    - Did it work in the lab?
+    - Did the firmware compile and load in our automated test suite?
+
+As with the previous practical assessment, marks will be awarded for both core
+functionality (e.g. getting the RoboCar to move around, or getting the TV
+Remote to flash the LEDs with valid control patterns, or getting the MP3
+player to play music) and for additional elements that you may decide are
+appropriate. Data collection and analysis will also attract marks (how much
+battery life does your project expect? how fast does LoRaWAN communication via
+the Things Network happen? how secure is your solution?).

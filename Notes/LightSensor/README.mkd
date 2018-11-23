@@ -1,0 +1,14 @@
+COM3505 Light Sensor
+===
+
+We are using the TSL2561 light sensor in a handy breakout [from
+Adafruit](https://learn.adafruit.com/tsl2561?view=all).
+
+You will need to solder some jumper wires to four points on the sensor - these
+are the same whether you have the square or round board:
+
+![Light sensor](Light_sensor.jpg)
+
+Then it's a simple matter of plugging the wires into the expander like so:
+
+![Light sensor expander](Light_sensor_expander.jpg) 

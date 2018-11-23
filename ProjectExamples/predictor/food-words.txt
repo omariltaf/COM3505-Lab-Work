@@ -1,0 +1,34 @@
+crop
+harvest
+apples
+beetroot
+broad beans
+broccoli
+brussel sprouts
+cabbage
+carrots
+courgettes
+currants
+french beans
+climbing beans
+gooseberries
+leeks
+lettuce
+onions
+other
+parsnips
+peas
+plums
+potatoes
+raspberries
+runner beans
+squash
+pumpkins
+strawberries
+sweetcorn
+tomatoes
+trained apples
+trained plums
+turnips
+salad leaves
+swedes

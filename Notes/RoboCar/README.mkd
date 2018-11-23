@@ -1,0 +1,75 @@
+Robot Car Notes
+===
+ 
+The robot we'll be making is from Adafruit:
+ 
+![robot](robotics_Robot.gif  "robot")
+
+Although ours will look different on top as we're using an unphone rather than
+a feather board to control the device.
+
+When following the build instructions, read through them first before jumping
+off to the linked details and starting assembly -- there are some steps in the
+earlier instructions that you are later told to modify.
+
+Follow [Adafruit's build
+instructions](https://learn.adafruit.com/tri-layer-mini-round-robot-chassis-kit?view=all#)
+to construct the robot chassis and then [attach the unphone on
+top](https://learn.adafruit.com/adabox002/assembling-your-robot). (Ignore the
+"*Temporarily unable to load embedded content*" message.)
+
+(See also the [other Adabox002 videos](https://www.adafruit.com/product/3235),
+but again, remember that we'll be using the unphone as our processing board
+rather than the bluetooth board supplied in AdaBox002.)
+
+You will need to solder the motor driver board, and use a small pozidrive
+screwdriver and a small pair of pliers (available in the electronics lab or
+project space -- DIA 2.01 or 1.01) to put the headers into the stepper motor
+connections as shown:
+
+![motor driver with headers](motor_driver_with_headers.jpg) 
+
+Also you should assemble the unphone in it's case and attach the ffc cable:
+
+![unphone in case with ffc](unphone_in_case_with_ffc.jpg)
+
+And lastly, assemble the expander following the instructions referenced earlier.
+
+Now we can connect the motors to the header pins:
+
+![robocar front](robocar_front.jpg)
+
+and screw the battery box wires into the connector at the side of the motor
+driver - make sure to put the red lead in the + connection and the black one
+into the - connection:
+
+![robocar side](robocar_side.jpg) 
+
+
+You can follow the next section here: [basic code for
+robot](https://learn.adafruit.com/adabox002/how-your-robot-works-the-basics)
+to test out the robot.
+
+We are using the aREST library to provide a RESTful interface - one that
+responds to HTTP calls to URI's like //esp32/forward 
+
+The code is on github
+[here](https://github.com/openhardwarerobots/esp8266-robot) and the code is
+explained on
+[this](https://learn.adafruit.com/build-an-esp8266-mobile-robot/configuring-the-robot)
+Adafruit page.
+
+Modify the sketch to use your local wifi access point (phones on tether work
+well as they report the IP of connected devices). Also change the first two
+lines to adapt this code to run on the ESP32; they should read:
+
+```C
+    #include <WiFi.h>
+    #include <aREST.h>
+```
+
+Once you have programmed your esp32 you can discover it's IP address either on
+the serial port or via your hotspot. Using a laptop, join the same network as
+the esp32. Edit the `script.js` file inside the interface directory to replace
+the IP address with that for your ESP32. Now you can run the `demo.html` file
+in a browser for wifi control of the robot!

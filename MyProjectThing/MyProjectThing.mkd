@@ -1,0 +1,5 @@
+My Project Documentation
+===
+
+Write documentation of your project design, and subsequently document your
+implementation.

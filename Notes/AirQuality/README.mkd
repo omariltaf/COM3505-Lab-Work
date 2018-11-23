@@ -1,0 +1,102 @@
+Air quality monitor notes
+===
+
+We'll be using two low-cost sensors to give an indication of air quality, a
+dust sensor (Sharp GYP2Y1010AU0F) and a Volatile Organic Compounds sensor
+(MQ-135). In addition we're using a digital temperature and humidity sensor,
+the AM2302; and a 5V boost circuit to allow the sensors to run on batteries.
+
+Both sensors are analog sensors that are powered by 5V. They return a voltage
+that is between 0V-5V; the level of the voltage is proportional to the level
+of dust or VOC's sensed.
+
+Because our ADC (Analog to Digital Converter) in the ESP32 only has a limited
+input voltage range (0-3.3V with other ranges available) we need to scale the
+sensor output voltage with a potential divider.
+
+A potential divider is made of two resistors that divide the voltage according
+to the formula:
+
+```
+    Vout = Vin ( R2 / R1+R2 )
+```
+
+We need to divide the Vout by 5 to scale it correctly, giving Vout=3.3 and
+Vin=5; working out the equation to fit into the available resistor values is a
+nice excercise for the reader.
+
+If the reader does not feel like exercising then online calculators such as
+http://www.ti.com/download/kbase/volt/volt_div3.htm will select resistors that
+minimise the error.
+
+For further reading about the voltage divider see
+https://learn.sparkfun.com/tutorials/voltage-dividers.
+
+The output voltages from these dividers go to the ESP32 -- it has multiple ADC
+channels -- we are using A0 and A4.
+
+In our circuit, resistors R4 & R5 form a potential divider for the VOC sensor,
+reducing it's range from the 0-5V the sensor outputs to 0-3.3V. The ADC has a
+switchable attenuator and so we can set it for 3.3V range with
+`analogSetPinAttenuation(A0, ADC_11db)`.
+
+For the dust sensor, we can also use the same voltage divider to reduce the 5V
+output down to a measurable 3.3V, resistors R2 & R3 form this potential
+divider.
+
+The other components in our circuit, R1 and C1, are needed to make the dust
+sensor operate correctly. The capacitor C1 is an electrolytic type that has
+polarity - make sure you wire it in the correct way round!
+
+![a schematic](Air-Quality-Schematic.png)
+
+Stick the breadboard and dust sensors down to the assembled expander board
+using sticky pads:
+
+![Expander with bb dust](Expander_with_bb_dust.jpg) 
+
+The idea is to place the dust sensor so that the hole in the centre of the
+sensor is below the board, so that air (and dust) can be measured:
+
+![Dust sensor](Dust_sensor.jpg)
+
+Using the schematic as a guide, connect your component together on the
+breadboard. You may find the wires from the dust sensor difficult to insert
+into the breadboard -- try twisting the strands of wire together. You may need
+to use a soldering iron to melt some solder onto the twisted wire -- this is
+called 'tinning' the wire:
+
+![Tinned wires](Tinned_Wires.jpeg  "Good and bad tinned wired") from:
+http://thesolderblog.blogspot.co.uk/
+
+Then I suggest starting by connecting the power wires - there are three
+voltages in this circuit, two potential dividers and three signals going into
+the ESP32! With all those connections it really helps to use colour codes to
+help keep them all in the right places. I've used:
+
+- Black for Ground
+- Yellow for VBAT
+- Red for 3,3V
+- Orange for 5V
+- Green for the MQ-135 signal
+- Blue for the AM2302 signal
+- Brown for the dust sensor signal
+
+After the wires and passive components have been placed on the breadboard it
+should look something like this:
+
+![Breadboard with passives](Breadboard_with_passives.jpg)
+
+Here is a pictorial version:
+
+![Air Quality Breadboard](Air-Quality-Breadboard.png) 
+
+Check that your dust sensor cable has the same colours!! If not then you'll
+have to make a note of which colour wire is which to ensure the right pins on
+the sensor go to the right places on the circuit!):
+
+![connector wires](connector_wires.jpg)
+
+Now we can add the dust sensor, the AM2302 and MQ-135 sensors:
+
+![Breadboard with sensors](Breadboard_with_sensors.jpg) 

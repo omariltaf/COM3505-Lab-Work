@@ -1,0 +1,18 @@
+unPhone NeoPixel
+===
+
+Adafruit's NeoPixels are bright multicolour LEDs controlled via a single
+signal wire (plus two for power). [Read up on them
+here](https://learn.adafruit.com/adafruit-neopixel-uberguide?view=all) - we're
+using the [NeoPixel
+stick](https://learn.adafruit.com/adafruit-neopixel-uberguide?view=all#neopixel-stick-7-1).
+
+To get them working with the unPhone, first solder on three connections for
+power and data:
+
+![Neopixel wired.](Neopixel_wired.jpg)
+
+Then connect these to the USB 5V, GND and pin A0 as shown:
+
+![Neopixel on expander](Neopixel_on_expander.jpg) 
+

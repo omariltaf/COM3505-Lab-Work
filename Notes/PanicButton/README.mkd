@@ -1,0 +1,28 @@
+COM3505 Panic Button
+===
+
+This project provides a way to signal panic to others, e.g. security staff. In
+order to be a useful panic button, we need a way to find our location and
+report this.
+
+This could be provided by a GPS chip, however these consume a moderate ammount
+of power and take a fair ammount of time to initialise and get a 'first fix'.
+In addition they don't work well in urban canyons (between buildings) or
+indoors.
+
+We will be using a cunning technique that relies on the relative strength of
+wireless signals. By comparing the signal strength seens by a device with a
+map of access points the location of the device can be inferred through
+triangulation.
+
+Google has already done the tedious task of collecting the location of
+millions of wireless access points and makes an API available (to developers)
+that takes a list of wireless signals in the location, and returns a latitude
+and longitude co-ordinate.
+
+Github user @gmag11 has contributed code for the ESP32 that uses the google
+API to return location data - [Google location
+code](https://github.com/gmag11/ESPWifiLocation).
+
+You will need to get a google API key from [Google Geolocation
+API](https://developers.google.com/maps/documentation/geolocation/get-api-key).

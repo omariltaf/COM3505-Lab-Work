@@ -1,0 +1,28 @@
+COM3505 week 10 course notes
+===
+
+# The Lecture
+
+This week's lecture slides are here: https://goo.gl/kNkQtU
+
+
+# NOTE...
+
+Project work is due for completion in week 12 when you **show your project**
+to COM3505 staff during the lab session on Friday 14th December, 11am to
+13:50pm. As per the usual arrangement, the deadline for pushing your work to
+Github is 2 hours before then (9am Friday 14th Dec).
+
+
+# Learning Objectives
+
+Our objective this week are to get cracking on the projects, continuing the
+course theme of _learning by doing_. Three more weeks and you'll have had a
+real taste of creating a new IoT device, from breadboard to prototype, and be
+all set to become a practising IoT engineer :)
+
+
+# Assignments and Assessment
+
+Project build instructions, kit lists, and firmware templates are documented
+in some detail in [Projects.mkd](Projects.mkd).

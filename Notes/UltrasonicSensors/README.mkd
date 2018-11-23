@@ -1,0 +1,38 @@
+Ultrasonic sensors
+===
+
+The HC-SR04 ultrasonic sensor is a cheap and cheerful way of sensing distance
+to solid objects like a wall. The device is well descibed here: [tutorial on
+ultrasonic
+sensor](http://www.instructables.com/id/Simple-Arduino-and-HC-SR04-Example/).
+
+We can connect it to an ESP32 without needing any additional components:
+
+![ultrasonic sensor on breadboard](ultrasonics-breadboard.png).
+
+Following the schematic here:
+
+![ultrasonic sensor on breadboard](ultrasonics-schematic.png).
+
+You can use this sensor without a library, as its operation is so simple. The
+sensor is triggered by a 10ms pulse to the TRIG pin, from GPIO pin 25. The
+sensor sends an ultrasonic pulse and waits for the response, triggering the
+ECHO pin to GPIO pin 34. The time between the trigger and the echo is directly
+proportional to the distance between the sensor and the object. The sensor
+doesn't work properly with small objects and complex fields of view - it's
+really designed for detecting obstacles like walls. In code, once the trigger
+pulse has been set, the arduino function `pulseIn` is useful to time the
+response:
+
+```C++
+int duration = pulseIn(echoPin, HIGH);
+int distance = (duration/2) / 29.1;
+Serial.print(distance);
+Serial.println(" cm");
+```
+
+However, this sensor is not very well behaved! It occasionally gives wrong
+values, sometimes the pulse never returns to the sensor correctly, and
+sometimes a spurious signal will be reported. Simple functions to average
+readings or exclude results that are more than 50% larger or smaller than the
+average of the last few results can help clean up the data.
