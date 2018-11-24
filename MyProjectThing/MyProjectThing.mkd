@@ -1,5 +1,26 @@
-My Project Documentation
-===
+# __Design__ __Document__ :
 
-Write documentation of your project design, and subsequently document your
-implementation.
+# Aim:
+
+The aim for this project was to create a fully functional air monitoring system that would be able to test for dust, for volitile organic compunds, for humidty and for tempurature.
+
+This will involve using the following components:
+ - the ___Unphone___.
+ - a dust sensor (Sharp GYP2Y1010AU0F)
+ - a Volatile Organic Compounds sensor (MQ-135)
+ - a digital temperature and humidity sensor, the AM2302
+
+The success of the project will be determined by the ability of the device to return realtime values describing the state of the air on the unphone.
+
+# UI Design :
+
+The design for the _UI_ is simple. It will require a start button and a stop button to act as a switch for the device. It will also require a text display for the values from the sensors.
+
+It has been decided to have a title screen with a start button that will begin the air monitoring function. This is the concept:
+
+
+It will have a second display screen that will display the values being returned by the sensor. This is the concept:
+
+# Air Monitor Design :
+
+# Backend Design :

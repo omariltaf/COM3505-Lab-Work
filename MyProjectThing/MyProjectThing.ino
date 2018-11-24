@@ -5,7 +5,7 @@
 // TestScreen::activate(true); to false to change this behaviour.
 
 #include "unphone.h"
-
+ float screenHeight = 110.0f;
 void setup() {
   Wire.setClock(100000); // higher rates trigger an IOExpander bug
   UNPHONE_DBG = true;
@@ -68,10 +68,81 @@ void setup() {
   // send a LoRaWAN message to TTN
   lmic_init();
   lmic_do_send(&sendjob);
+  uiScreen();
 }
 
 void loop() {
   bool usbPowerOn = checkPowerSwitch(); // shutdown if switch off
   
   TestScreen::testSequence(usbPowerOn); // run a test on all modules
+  //uiScreen();
+}
+
+// This is calibration data for the raw touch data to the screen coordinates
+#define TS_MINX 3800
+#define TS_MAXX 100
+#define TS_MINY 100
+#define TS_MAXY 3750
+
+bool disp = true;
+bool start = false;
+
+void uiScreen() {
+  if(!start && disp){
+    tft.fillScreen(HX8357_WHITE);
+    tft.setTextSize(3.5);
+    tft.setCursor(80, 120);
+    tft.setTextColor(HX8357_BLACK);
+    tft.print("Air Monitor");
+    tft.fillRect(110, 320, 100, 40 , HX8357_GREEN);
+    tft.setCursor(120, 330);
+    tft.setTextColor(HX8357_WHITE);
+    tft.print("Start");
+    disp = false;
+  }
+  else if(start && disp){
+  tft.fillScreen(HX8357_WHITE);
+    tft.setTextSize(3.5);
+    tft.setCursor(60, 30);
+    tft.setTextColor(HX8357_BLACK);
+    tft.print("Air Monitor");
+
+    tft.setTextSize(2.5);
+    tft.setTextColor(HX8357_RED);
+    tft.setCursor(30, 120);
+    tft.print("dust");
+    tft.setCursor(200, 120);
+    tft.print(":");
+    tft.setTextColor(HX8357_GREEN);
+    tft.setCursor(30, 160);
+    tft.print("Compund");
+    tft.setCursor(200, 160);
+    tft.print(":");
+    tft.setTextColor(HX8357_BLUE);
+    tft.setCursor(30, 200);
+    tft.print("humidity");
+    tft.setCursor(200, 200);
+    tft.print(":");
+    tft.setCursor(30, 240);
+    tft.print("tempurature");
+    tft.setCursor(200, 240);
+    tft.print(":");
+    tft.fillRect(110, 320, 100, 40 , HX8357_RED);
+    tft.setCursor(120, 330);
+    tft.setTextSize(3.5);
+    tft.setTextColor(HX8357_WHITE);
+    tft.print("Stop");
+    disp = false;
+  }
+  
+   TS_Point p = ts.getPoint();
+   p.x = map(p.x, TS_MINX, TS_MAXX, tft.width(), 0);
+   p.y = map(p.y, TS_MINY, TS_MAXY, 0, tft.height());
+
+   if(p.x < 210 && p.x > 110 && p.y > 100 && p.y < 140 && !disp) {
+    disp = true;
+    start = !start;
+    p.x = 0;
+    p.y = 0;
+   }
 }
