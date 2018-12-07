@@ -63,9 +63,12 @@ board](Expander/README.mkd):
 
 Using the IR LEDs built in to the unPhone, start by reviewing the TV-B-Gone
 [codes and code
-inspiration](https://learn.adafruit.com/tv-b-gone-kit?view=all). We've also
-got a [light sensor](LightSensor/README.mkd) that includes an IR photodiode -
-so you can detect when the IR LED's are on!
+inspiration](https://learn.adafruit.com/tv-b-gone-kit?view=all). Checkout the
+[build notes](IRRemote/README.mkd) for how to get started. You can now collect
+an infra-red reciever: ![IR reciever](IRRemote/TSOP4838.JPG) that demodulates
+the IR transmissions and produces digital signals straight into the ESP32.
+We've also got a [light sensor](LightSensor/README.mkd) that includes an IR
+photodiode - so you can detect when the IR LED's are on.
 
 ![Light sensor on expander](LightSensor/Light_sensor_expander.jpg)
 
