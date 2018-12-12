@@ -18,9 +18,17 @@ The design for the _UI_ is simple. It will require a start button and a stop but
 
 It has been decided to have a title screen with a start button that will begin the air monitoring function. This is the concept:
 
+![](images/Mockup.png)
 
 It will have a second display screen that will display the values being returned by the sensor. This is the concept:
 
+![](images/Mockup_readings.png)
+
+Additionally, the design required to show the results from the sensor as well as the analysis for thise results. We decided to have a navigation buttons to enable changing between the different pages, which will show simple visual analysis of the data from the sensors. It will show what the optimum values should be, to allow comparison with the live values from the sensor. The issue with this is because of the amount of information from the sensors, only a fixed amount of information can be visualised at a go.
+
+This is the concept:
+
+![](images/Mockup_analysis.png)
 # Air Monitor Design :
 
 # Backend Design :
