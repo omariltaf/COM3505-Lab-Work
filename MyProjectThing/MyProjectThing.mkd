@@ -29,6 +29,8 @@ Additionally, the design required to show the results from the sensor as well as
 This is the concept:
 
 ![](images/Mockup_analysis.png)
+
+Iterations of the designs have been made from the original. design to ,ake it more useable and practical.
 # Air Monitor Design :
 
 # Backend Design :

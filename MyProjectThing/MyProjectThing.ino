@@ -144,5 +144,7 @@ void uiScreen() {
     start = !start;
     p.x = 0;
     p.y = 0;
+    p.x = map(p.x, TS_MINX, TS_MAXX, tft.width(), 0);
+    p.y = map(p.y, TS_MINY, TS_MAXY, 0, tft.height());
    }
 }

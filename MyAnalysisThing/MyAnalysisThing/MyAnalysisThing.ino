@@ -5,6 +5,9 @@
 #include "IOExpander.h"         // unPhone's IOExpander (controlled via I²C)
 #include <Adafruit_Sensor.h>    // base class etc. for sensor abstraction
 #include <Adafruit_LSM303_U.h>  // the accelerometer sensor
+#include <Adafruit_CC3000.h>
+#include <ccspi.h>
+#include <PubSubClient.h>
 
 // power management chip config
 byte I2Cadd = 0x6b;      // I2C address of the PMU
@@ -27,12 +30,23 @@ int peny = 0;
 int oldx = 0;
 int oldy = 0;
 
+#define IO_USERNAME  "nevillekitala"
+#define IO_KEY       "ce6d1f76919149418106828f8b4bda7c"
+
+#define TEMPERATURE_PUBLISH_PATH "nevillekitala/feeds/tempurature/data/send.json"
+#define HUMIDITY_PUBLISH_PATH "nevillekitala/feeds/humidity/data/send.json"
+
+
+  
 // setup ////////////////////////////////////////////////////////////////////
 void setup(void) {
   Serial.begin(115200);
   Serial.println("Starting");
   Serial.println("Version 1.01");
   Serial.println("etch-a-sketch by gareth");
+
+  Adafruit_CC3000_Client client = Adafruit_CC3000_Client();
+  PubSubClient mqttclient("io.adafruit.com", 1883, callback, client);
 
   /* Initialise the sensor */
   Wire.setClock(100000);
@@ -65,6 +79,10 @@ void loop() {
   int rand = random(20,309);
   barGraph(rand);
   delay(500);
+  mqttclient.publish(TEMPERATURE_PUBLISH_PATH, (char *) String(t).c_str());
+  delay(2000);
+  mqttclient.publish(HUMIDITY_PUBLISH_PATH, (char *) String(h).c_str());
+  delay(2000);
 }
 
 //analysis
