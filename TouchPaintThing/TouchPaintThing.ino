@@ -154,6 +154,8 @@ void loop(void) {
   // scale from ~0->4000 to tft.width using the calibration #'s
   p.x = map(p.x, TS_MAXX, TS_MINX, tft.width(), 0);
   p.y = map(p.y, TS_MAXY, TS_MINY, 0, tft.height());
+  Serial.println(p.x);
+  Serial.println(p.y);
 
   // respond to the touch
   if(p.y < BOXSIZE) // we're in the menu area
