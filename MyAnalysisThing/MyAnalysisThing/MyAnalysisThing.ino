@@ -22,7 +22,7 @@ Adafruit_HX8357 tft =
 Adafruit_LSM303_Accel_Unified accel = Adafruit_LSM303_Accel_Unified(54321);
 
 // x and y coords of the etching pen
-int penx = 0;
+int penx = 20;
 int peny = 0;
 int oldx = 0;
 int oldy = 0;
@@ -63,27 +63,35 @@ void setup(void) {
 void loop() {
   checkPowerSwitch();
   int rand = random(20,309);
-  lineGraph(rand);
+  barGraph(rand);
   delay(500);
 }
 
 //analysis
 void lineGraph(int current){
   Serial.println(current);
-  if(penx< 99){
+  if(penx<319 && penx > 20){
     oldx = penx;
     oldy = peny;
-    penx ++;
+    penx += 25;
     peny = current;
   }
   else{
-    penx = 0;
-    oldx = 0;
+    penx = 20;
+    oldx = 20;
     oldy = peny;
-    penx ++;
+    penx +=25;
     peny = current;
-    
+  
     tft.fillScreen(HX8357_BLACK);
+    tft.drawLine(20,459,319,459,HX8357_WHITE);
+    tft.setCursor(5,5);
+    tft.println("air");
+    
+    tft.drawLine(20,459,20,20,HX8357_WHITE);
+    tft.setCursor(279,470);
+    tft.println("time");
+
     tft.drawLine(20,240,319,240,HX8357_RED);
     tft.setCursor(259,240);
     tft.println("optimum");
@@ -93,20 +101,29 @@ void lineGraph(int current){
 
 void barGraph(int current){
   Serial.println(current);
-  if(penx< 99 && penx > 0){
+  if(penx< 319 && penx > 20){
     penx +=25;
     peny = current;
   }
   else{
-    penx = 0;
+    penx = 20;
     penx += 25;
     peny = current;
     tft.fillScreen(HX8357_BLACK);
+    tft.drawLine(20,459,319,459,HX8357_WHITE);
+    tft.setCursor(5,5);
+    tft.println("air");
+    
+    tft.drawLine(20,459,20,20,HX8357_WHITE);
+    tft.setCursor(279,470);
+    tft.println("time");
+
+  
     tft.drawLine(20,240,319,240,HX8357_RED);
     tft.setCursor(259,240);
     tft.println("optimum");
   }
-  tft.fillRect(penx, 20, 25, peny , HX8357_GREEN);
+  tft.fillRect(penx, peny, 25, (459-peny) , HX8357_GREEN);
 }
 
 // power management chip API /////////////////////////////////////////////////
