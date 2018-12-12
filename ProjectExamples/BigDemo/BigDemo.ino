@@ -22,6 +22,7 @@ int loopIter = 0;                       // counter for main loop
 int loopIter2 = 0;                      // counter for wifi task loop
 
 UIController *uiCont;
+void recoverI2C();
 
 void setup() {
   Wire.setClock(100000); // higher rates trigger an IOExpander bug
@@ -29,6 +30,7 @@ void setup() {
   Serial.begin(115200);  // init the serial line
 
   // fire up I²C, and the unPhone's IOExpander library
+  recoverI2C();
   Wire.begin();
   IOExpander::begin();
 
@@ -72,6 +74,32 @@ void loop() {
     }
     loopIter++;
   }
+}
+
+// try to recover I2C bus in case it's locked up...
+// NOTE: only do this in setup **BEFORE** Wire.begin!
+void recoverI2C() {
+  pinMode(SCL, OUTPUT);
+  pinMode(SDA, OUTPUT);
+  digitalWrite(SDA, HIGH);
+
+  for(int i = 0; i < 10; i++) { // 9th cycle acts as NACK
+    digitalWrite(SCL, HIGH);
+    delayMicroseconds(5);
+    digitalWrite(SCL, LOW);
+    delayMicroseconds(5);
+  }
+
+  // a STOP signal (SDA from low to high while SCL is high)
+  digitalWrite(SDA, LOW);
+  delayMicroseconds(5);
+  digitalWrite(SCL, HIGH);
+  delayMicroseconds(2);
+  digitalWrite(SDA, HIGH);
+  delayMicroseconds(2);
+
+  // I2C bus should be free now... a short delay to help things settle
+  delay(200);
 }
 
 /* TODO

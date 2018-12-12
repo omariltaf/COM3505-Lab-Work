@@ -1,0 +1,86 @@
+COM3505 week 11 course notes
+===
+
+# The Lecture
+
+This week's lecture slides are here: https://goo.gl/AFVPEm
+
+
+# Learning Objectives
+
+Our objectives this week are to:
+
+- finish the majority of the project work
+- review the theoretical and background content of the course in advance of
+  the exam on Monday 10th December (NC PC lab, 9am to 10:50am)
+
+
+# Assignments and Assessment
+
+Projects: two more weeks left! We recommend that you:
+
+- iterate through design documentation, implementation, testing, progress
+  documentation
+- keep checking in to github
+- keep half an eye on your plan for demonstrating the work in week 12 (how
+  will you show the teaching staff all of your projects functions? how will
+  you cope with delays? the slot will be 15 minutes this time, but that's
+  still very short if things go wrong!)
+
+
+# Coding Hints
+
+- several things have changed in the `libraries/` tree:
+  - added an IR library for the new sensor
+  - fixed a bug in our unPhone patch of the GFX library so that it works more
+    reliably with the IOExpander
+- we also fixed the `BigDemo.ino` sketch in `ProjectExamples/` so that bitmap
+  drawing and mp3 playing work properly; note that the latter means that the
+  screen which plays music will block for the duration of whatver you put in
+  `track001.mp3` on the SD card!
+- we've updated the [project notes](Projects.mkd) to deal with the fact that
+  our original IR sensor (the TSL25[69]1) isn't fast enough to properly demo
+  the TV-B-Gone and TV Remote projects :( but we've got a new one that is :)
+  (there's now an [IRRemote/](IRRemote/) README with details)
+- there are also [IRReceiver](../ProjectExamples/IRReceiver) and
+  [IRSendDemo](../ProjectExamples/IRSendDemo) example sketches
+- if you're experiencing the lockup bug which we mentionned, we now have a fix
+  (below) and available in
+  [BigDemo.ino](../ProjectExamples/BigDemo/BigDemo.ino) (it was due to
+  re-programming or reset happening during I2C transactions, and bus users
+  being left in states that prevented other devices from regaining control,
+  and the fix is to reset the bus during intialisation)
+
+```C++
+void recoverI2C();
+
+setup() {
+  // before Wire.begin, make sure the I2C bus is free
+  recoverI2C();
+  ...
+}
+...
+void recoverI2C() {   // try to recover I2C bus in case it's locked up...
+  pinMode(SCL, OUTPUT);
+  pinMode(SDA, OUTPUT);
+  digitalWrite(SDA, HIGH);
+
+  for(int i = 0; i < 10; i++) { // 9th cycle acts as NACK
+    digitalWrite(SCL, HIGH);
+    delayMicroseconds(5);
+    digitalWrite(SCL, LOW);
+    delayMicroseconds(5);
+  }
+
+  // a STOP signal (SDA from low to high while SCL is high)
+  digitalWrite(SDA, LOW);
+  delayMicroseconds(5);
+  digitalWrite(SCL, HIGH);
+  delayMicroseconds(2);
+  digitalWrite(SDA, HIGH);
+  delayMicroseconds(2);
+
+  // I2C bus should be free now... a short delay to help things settle
+  delay(200);
+}
+```

@@ -1,0 +1,61 @@
+IR-Remote notes
+===
+
+The unphone has built-in IR LED's so we can use it to send remote control
+commands - for example to turn off tv's, or perhaps issue a series of commands
+such as turn on tv, turn on satillite box, change input source, etc.
+
+The mechanics of using the timers is complex and also different on the arduino
+uno and the ESP32. Luckily the well established [IRremote Arduino
+Library](https://github.com/z3t0/Arduino-IRremote)  by z3t0 handles this for
+us. The latest version lists support for ESP32 recieving IR only!
+
+Good old Andreas Speiss has implemented the missing send functionality from
+the [IR remote library](https://github.com/SensorsIot/Definitive-Guide-to-IR).
+
+The libary should be modified to reflect the IR LED pin used on the unphone -
+so if you're installing this yourself then modify the IRremote.h file - line
+262 - change: `byte timerPwmPin=3;` to read: `byte timerPwmPin=12;`
+
+In order to know the codes that are used in a certain device (there are
+hundreds of different propriatary formats!) you can search on the internet -
+noting that there are at least three ways to write the binary formats and
+several other ways to express the codes even in a particular protocol.
+
+This
+[page](http://www.righto.com/2010/03/understanding-sony-ir-remote-codes-lirc.html)
+gives good if dense info - combined with
+[this](http://www.hifi-remote.com/sony/Sony_tv.htm) page listing sony tv
+device codes.
+
+Ok - so, from the code page, we see that the first table lists basic codes,
+such as code 21 for power. The Sony:1 at the head of the table tells us that
+of the various device codes used by sony tvs, these codes are part of device
+1.
+
+So the righto page 12 bit worked example gives us a template for how to
+proceed:
+
+Our command is code 21 - convert to the 7 bit binary value 0010101 and reverse
+it to get 1010100. My device code 1 gets expressed as a 5 bit binary value
+00001 and reverse it to get 10000. Put these together to get 101010010000,
+which is A90 hex. Whew! The 12-bit nature of the codes explains the second
+parameter in the call.
+
+And looking at the example sketches included with the library, IRsendDemo does
+indeed use code 0xA90 - this provides confidence that maybe I've got my sums
+right - and lo and behold - it turns my tv off!
+
+It is often easier to connect an IR reciever device: ![IR reciever
+device](TSOP4838.JPG) and read the codes that are produced by an existing
+remote control. In order to do this we use a TSOP4838 photoreciever device
+that has a sensor, amplifier, demodulator and signal conditioning circuitry
+all built in. It connects directly to the ESP32 as illustrated:
+
+![sensor in socket](4838inSocket.JPG) 
+
+Pin 1 is Data Out, pin 2 is Ground and pin 3 is Vcc - 3.3V in our case. This means you can just put the sensor into the expander as shown above, and the data comes into pin A0. However it isn't very robust!
+
+For a more reliable connection, solder the sensor directly into the board, using the alternative connections shown:
+
+![sensor in holes](4838inholes.jpg) 

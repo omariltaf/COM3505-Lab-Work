@@ -1,5 +1,19 @@
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
+
+/* NOTE:
+the two light sensors we've given out (round and square) are subtly different!
+The round one is a TSL2561 and the square one is a TSL2591 - the example code
+given in this file is for the TSL2561 round sensor.
+
+If you have a TSL2591 sensor then look at the example sketch (in the
+IDE>Sketch>Examples menu, or here
+https://github.com/adafruit/Adafruit_TSL2591_Library/blob/master/examples/tsl2591/tsl2591.ino
+to see how to replace the getLuminosity call with e.g. uint16_t x =
+tsl.getLuminosity(TSL2591_INFRARED); instead (and change the header include to
+#include "Adafruit_TSL2591.h"
+*/
+
 #include <Adafruit_TSL2561_U.h>
 
 /* This driver uses the Adafruit unified sensor library (Adafruit_Sensor),
@@ -126,7 +140,7 @@ uint16_t broadband = 0;
 uint16_t infrared = 0;
  
 /* Populate broadband and infrared with the latest values */
-getLuminosity (&broadband, &infrared);
+tsl.getLuminosity (&broadband, &infrared);
 Serial.print("Infra-Red: ");
 Serial.println(infrared);
 }
