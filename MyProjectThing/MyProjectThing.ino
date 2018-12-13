@@ -12,6 +12,7 @@
 #include <IOExpander.h>          // unPhone's IOExpander (controlled via I²C)
 #include <GP2Y1010_DustSensor.h> // Library for the Sharp dust sensor
 #include <DHTesp.h>              // Library for temperature / humidity sensor
+#include "WiFiStuff.h"
 
 // This is calibration data for the raw touch data to the screen coordinates
 #define TS_MINX 3800
@@ -25,12 +26,17 @@ const int DustLEDPin = 32;
 const int DustPin = 15;
 const int dhtPin = 14;
 
+// Stored dust and gas sensor readings for use when connected to wifi
+float dustVals[20];
+float gasVals[20];
+
 DHTesp dht;
 GP2Y1010_DustSensor dustsensor;
 float screenHeight = 110.0f;
 
 int screen = 1;
 bool currentScreenIsDrawn = false;
+bool connectNetworkPressed = false;
 
 // the LCD
 #define TFT_DC   33      // this isn't on the IO expander
@@ -149,48 +155,79 @@ void loop() {
       dustScreen();
       currentScreenIsDrawn = true;
     }
+    dustScreenUpdate();
     if(p.x < 140 && p.x > 0 && p.y > 420 && p.y < 480) {
       screen = 2;
       currentScreenIsDrawn = false;
+      resetValues();
     } else if (p.x < 320 && p.x > 180 && p.y > 420 && p.y < 480) {
       screen = 4;
       currentScreenIsDrawn = false;
+      resetValues();
     }
   } else if (screen == 4) {
     if (!currentScreenIsDrawn) {
       gasScreen();
       currentScreenIsDrawn = true;
     }
+    gasScreenUpdate();
     if(p.x < 140 && p.x > 0 && p.y > 360 && p.y < 420) {
       screen = 3;
       currentScreenIsDrawn = false;
+      resetValues();
     } else if (p.x < 320 && p.x > 180 && p.y > 360 && p.y < 420) {
       screen = 5;
       currentScreenIsDrawn = false;
+      resetValues();
     }
   } else if (screen == 5) {
     if (!currentScreenIsDrawn) {
       temperatureScreen();
       currentScreenIsDrawn = true;
     }
+    temperatureScreenUpdate();
     if(p.x < 140 && p.x > 0 && p.y > 420 && p.y < 480) {
       screen = 4;
       currentScreenIsDrawn = false;
+      resetValues();
     } else if (p.x < 320 && p.x > 180 && p.y > 420 && p.y < 480) {
       screen = 6;
       currentScreenIsDrawn = false;
+      resetValues();
     }
   } else if (screen == 6) {
     if (!currentScreenIsDrawn) {
       humidityScreen();
       currentScreenIsDrawn = true;
     }
+    humidityScreenUpdate();
     if(p.x < 140 && p.x > 0 && p.y > 360 && p.y < 420) {
       screen = 5;
       currentScreenIsDrawn = false;
+      resetValues();
     } else if (p.x < 320 && p.x > 180 && p.y > 360 && p.y < 420) {
-      screen = 1;
+      screen = 7;
       currentScreenIsDrawn = false;
+      resetValues();
+    }
+  } else if (screen == 7) {
+    if (!currentScreenIsDrawn) {
+      connectionScreen();
+      currentScreenIsDrawn = true;
+    }
+    if(p.x < 140 && p.x > 0 && p.y > 420 && p.y < 480) {
+      screen = 6;
+      currentScreenIsDrawn = false; connectNetworkPressed = false; // disconnect from wifi here
+    } else if (p.x < 320 && p.x > 180 && p.y > 420 && p.y < 480) {
+      screen = 1;
+      currentScreenIsDrawn = false; connectNetworkPressed = false; // disconnect wifi
+    } else if (p.x < 260 && p.x > 60 && p.y > 160 && p.y < 220 && !connectNetworkPressed) {
+      updateStatusMessage("Gathering Dust and Gas sensor readings before connecting...");
+      saveDustGasValues();
+      updateStatusMessage("Connecting...");
+      connectionInit();
+      connectionLoop();
+      connectNetworkPressed = true;
     }
   }
 }
@@ -261,79 +298,149 @@ void valueScreen() {
   tft.print("NEXT");
 }
 
+float getDustValue() {
+  float dust = dustsensor.getDustDensity();
+  Serial.println(dust);
+  return dust;
+}
+
+float getGasValue() {
+  long valr = analogRead(GasPin);
+  // the 3.3V range is divided into 4096 steps, giving 0.000806V per step
+  // and the original voltage is divided by at 18K/10K resistor divider (*1.8)
+  float volts = valr*0.000806*1.8;
+  Serial.println(String(volts) + "V");
+  return volts;
+}
+
+float getTemperatureValue() {
+  TempAndHumidity newValues = dht.getTempAndHumidity();
+  Serial.println(String(newValues.temperature) + "C");
+  return newValues.temperature;
+}
+
+float getHumidityValue() {
+  TempAndHumidity newValues = dht.getTempAndHumidity();
+  Serial.println(String(newValues.humidity) + "%RH");
+  return newValues.humidity;
+}
+
+void saveDustGasValues() {
+  for (int i = 0; i < 20; i++) {
+    dustVals[i] = getDustValue();
+    gasVals[i] = getGasValue();
+  }
+}
+
 void drawValues() {
   tft.fillRect(220,130,100,170, HX8357_RED);
   tft.setTextSize(2.5);
   tft.setTextColor(HX8357_WHITE);
-  
-<<<<<<< HEAD
-   TS_Point p = ts.getPoint();
-   p.x = map(p.x, TS_MINX, TS_MAXX, tft.width(), 0);
-   p.y = map(p.y, TS_MINY, TS_MAXY, 0, tft.height());
-
-   if(p.x < 210 && p.x > 110 && p.y > 100 && p.y < 140 && !disp) {
-    disp = true;
-    start = !start;
-    p.x = 0;
-    p.y = 0;
-    p.x = map(p.x, TS_MINX, TS_MAXX, tft.width(), 0);
-    p.y = map(p.y, TS_MINY, TS_MAXY, 0, tft.height());
-   }
-=======
+   
   tft.setCursor(220,130);
-  float dust = dustsensor.getDustDensity();
+  float dust = getDustValue();
   tft.print(dust);
-  Serial.println(dust);
 
   tft.setCursor(220,170);
   long valr = analogRead(GasPin);
   // the 3.3V range is divided into 4096 steps, giving 0.000806V per step
   // and the original voltage is divided by at 18K/10K resistor divider (*1.8)
-  float volts = valr*0.000806*1.8;
+  float volts = getGasValue();
   tft.print(String(volts) + "V");
-  Serial.print(volts);
-  Serial.println("V");
   
-  TempAndHumidity newValues = dht.getTempAndHumidity();
   tft.setCursor(220,210);
-  tft.print(String(newValues.temperature) + "C");
+  tft.print(String(getTemperatureValue()) + "C");
   tft.setCursor(220,250);
-  tft.print(String(newValues.humidity) + "%RH");
+  tft.print(String(getHumidityValue()) + "%RH");
+  
+  delay(200);
+}
 
-<<<<<<< HEAD
-  delay(500);
+// x and y coords of the etching pen
+int penx = 20;
+int peny = 340;
+int oldx = 20;
+int oldy = 340;
+
+void lineGraph(float current, String yLabel){
+//  Serial.println(current);
+  if(penx < 300 && penx > 20) {
+    oldx = penx;
+    oldy = peny;
+    penx += 20;
+    peny = 340 - current;
+  }
+  else {
+    penx = 20;
+    oldx = 20;
+    oldy = peny;
+    penx += 25;
+    peny = 340 - current;
+  
+    tft.fillRect(0,100,320,260, HX8357_BLACK);
+    tft.drawLine(20,340,300,340,HX8357_WHITE);
+    tft.setTextSize(1);
+    tft.setTextColor(HX8357_WHITE);
+    tft.setCursor(270,350);
+    tft.println("Time (s)");
+    
+    tft.drawLine(20,340,20,120,HX8357_WHITE);
+    tft.setCursor(0,110);
+    tft.println(yLabel);
+
+    tft.drawLine(25,220,300,220,HX8357_RED);
+    tft.setCursor(270,230);
+    tft.println("Optimum");
+  }
+  tft.drawLine(oldx,oldy,penx, peny, HX8357_WHITE);
+}
+
+void resetValues() {
+  penx = 20; oldx = 20;
+  peny = 340; oldy = 340;
+}
+
+float scaleDustValue(float value) {
+  return ((value-0)/(100-0))*(200-0)+0;
+}
+
+float scaleGasValue(float value) {
+  return ((value-0)/(100-0))*(200-0)+0;
+}
+
+float scaleTemperatureValue(float value) {
+  return ((value-0)/(100-0))*(200-0)+0;
+}
+
+float scaleHumidityValue(float value) {
+  return ((value-0)/(100-0))*(200-0)+0;
+}
+
+void dustScreenUpdate() {
+  tft.fillRect(220,0,100,100, HX8357_BLUE);
+  tft.setTextSize(2.5);
+  tft.setTextColor(HX8357_WHITE);
+  tft.setCursor(220, 50);
+  float dust = getDustValue();
+  tft.print(String(dust));
+
+  lineGraph(scaleDustValue(dust), "Dust Density");
+  delay(200);
 }
 
 void dustScreen() {
   tft.fillScreen(HX8357_WHITE);
   tft.fillRect(0,0,320,100, HX8357_BLUE);
-  tft.fillRect(0,100,320,260, HX8357_RED);
+  tft.fillRect(0,100,320,260, HX8357_BLACK);
   tft.fillRect(0, 420, 140, 60 , HX8357_GREEN);
   tft.fillRect(180, 420, 140, 60 , HX8357_GREEN);
   
   tft.setTextSize(2.5);
-  tft.setCursor(40, 50);
+  tft.setCursor(30, 50);
   tft.setTextColor(HX8357_WHITE);
   tft.print("Dust Density");
-
-//  tft.setTextSize(2.5);
-//  tft.setTextColor(HX8357_WHITE);
-//  tft.setCursor(30, 130);
-//  tft.print("Dust Density");
-//  tft.setCursor(200, 130);
-//  tft.print(":");
-//  tft.setCursor(30, 170);
-//  tft.print("Gas Reading");
-//  tft.setCursor(200, 170);
-//  tft.print(":");
-//  tft.setCursor(30, 210);
-//  tft.print("Temperature");
-//  tft.setCursor(200, 210);
-//  tft.print(":");
-//  tft.setCursor(30, 250);
-//  tft.print("Humidity");
-//  tft.setCursor(200, 250);
-//  tft.print(":");
+  tft.setCursor(200, 50);
+  tft.print(":");
 
   tft.setTextSize(4);
   tft.setTextColor(HX8357_WHITE);
@@ -341,38 +448,33 @@ void dustScreen() {
   tft.print("BACK");
   tft.setCursor(200, 435);
   tft.print("NEXT");
+}
+
+void gasScreenUpdate() {
+  tft.fillRect(220,0,100,100, HX8357_BLUE);
+  tft.setTextSize(2.5);
+  tft.setTextColor(HX8357_WHITE);
+  tft.setCursor(220, 50);
+  float gas = getGasValue();
+  tft.print(String(gas) + "V");
+
+  lineGraph(scaleGasValue(gas), "Gas Reading (V)");
+  delay(200);
 }
 
 void gasScreen() {
   tft.fillScreen(HX8357_WHITE);
   tft.fillRect(0,0,320,100, HX8357_BLUE);
-  tft.fillRect(0,100,320,260, HX8357_RED);
+  tft.fillRect(0,100,320,260, HX8357_BLACK);
   tft.fillRect(0, 360, 140, 60 , HX8357_GREEN);
   tft.fillRect(180, 360, 140, 60 , HX8357_GREEN);
   
   tft.setTextSize(2.5);
-  tft.setCursor(40, 50);
+  tft.setCursor(30, 50);
   tft.setTextColor(HX8357_WHITE);
   tft.print("Gas Reading");
-
-//  tft.setTextSize(2.5);
-//  tft.setTextColor(HX8357_WHITE);
-//  tft.setCursor(30, 130);
-//  tft.print("Dust Density");
-//  tft.setCursor(200, 130);
-//  tft.print(":");
-//  tft.setCursor(30, 170);
-//  tft.print("Gas Reading");
-//  tft.setCursor(200, 170);
-//  tft.print(":");
-//  tft.setCursor(30, 210);
-//  tft.print("Temperature");
-//  tft.setCursor(200, 210);
-//  tft.print(":");
-//  tft.setCursor(30, 250);
-//  tft.print("Humidity");
-//  tft.setCursor(200, 250);
-//  tft.print(":");
+  tft.setCursor(200, 50);
+  tft.print(":");
 
   tft.setTextSize(4);
   tft.setTextColor(HX8357_WHITE);
@@ -382,36 +484,31 @@ void gasScreen() {
   tft.print("NEXT");
 }
 
+void temperatureScreenUpdate() {
+  tft.fillRect(220,0,100,100, HX8357_BLUE);
+  tft.setTextSize(2.5);
+  tft.setTextColor(HX8357_WHITE);
+  tft.setCursor(220, 50);
+  float temperature = getTemperatureValue();
+  tft.print(String(temperature) + "C");
+
+  lineGraph(scaleTemperatureValue(temperature), "Temperature (C)");
+  delay(200);
+}
+
 void temperatureScreen() {
   tft.fillScreen(HX8357_WHITE);
   tft.fillRect(0,0,320,100, HX8357_BLUE);
-  tft.fillRect(0,100,320,260, HX8357_RED);
+  tft.fillRect(0,100,320,260, HX8357_BLACK);
   tft.fillRect(0, 420, 140, 60 , HX8357_GREEN);
   tft.fillRect(180, 420, 140, 60 , HX8357_GREEN);
   
   tft.setTextSize(2.5);
-  tft.setCursor(40, 50);
+  tft.setCursor(30, 50);
   tft.setTextColor(HX8357_WHITE);
   tft.print("Temperature");
-
-//  tft.setTextSize(2.5);
-//  tft.setTextColor(HX8357_WHITE);
-//  tft.setCursor(30, 130);
-//  tft.print("Dust Density");
-//  tft.setCursor(200, 130);
-//  tft.print(":");
-//  tft.setCursor(30, 170);
-//  tft.print("Gas Reading");
-//  tft.setCursor(200, 170);
-//  tft.print(":");
-//  tft.setCursor(30, 210);
-//  tft.print("Temperature");
-//  tft.setCursor(200, 210);
-//  tft.print(":");
-//  tft.setCursor(30, 250);
-//  tft.print("Humidity");
-//  tft.setCursor(200, 250);
-//  tft.print(":");
+  tft.setCursor(200, 50);
+  tft.print(":");
 
   tft.setTextSize(4);
   tft.setTextColor(HX8357_WHITE);
@@ -421,45 +518,76 @@ void temperatureScreen() {
   tft.print("NEXT");
 }
 
+void humidityScreenUpdate() {
+  tft.fillRect(220,0,100,100, HX8357_BLUE);
+  tft.setTextSize(2.5);
+  tft.setTextColor(HX8357_WHITE);
+  tft.setCursor(220, 50);
+  float humidity = getHumidityValue();
+  tft.print(String(humidity) + "%RH");
+
+  lineGraph(scaleHumidityValue(humidity), "Humidity (%RH)");
+  delay(200);
+}
+
 void humidityScreen() {
   tft.fillScreen(HX8357_WHITE);
   tft.fillRect(0,0,320,100, HX8357_BLUE);
-  tft.fillRect(0,100,320,260, HX8357_RED);
+  tft.fillRect(0,100,320,260, HX8357_BLACK);
   tft.fillRect(0, 360, 140, 60 , HX8357_GREEN);
   tft.fillRect(180, 360, 140, 60 , HX8357_GREEN);
   
   tft.setTextSize(2.5);
-  tft.setCursor(40, 50);
+  tft.setCursor(30, 50);
   tft.setTextColor(HX8357_WHITE);
   tft.print("Humidity");
-
-//  tft.setTextSize(2.5);
-//  tft.setTextColor(HX8357_WHITE);
-//  tft.setCursor(30, 130);
-//  tft.print("Dust Density");
-//  tft.setCursor(200, 130);
-//  tft.print(":");
-//  tft.setCursor(30, 170);
-//  tft.print("Gas Reading");
-//  tft.setCursor(200, 170);
-//  tft.print(":");
-//  tft.setCursor(30, 210);
-//  tft.print("Temperature");
-//  tft.setCursor(200, 210);
-//  tft.print(":");
-//  tft.setCursor(30, 250);
-//  tft.print("Humidity");
-//  tft.setCursor(200, 250);
-//  tft.print(":");
+  tft.setCursor(200, 50);
+  tft.print(":");
 
   tft.setTextSize(4);
   tft.setTextColor(HX8357_WHITE);
   tft.setCursor(20, 375);
   tft.print("BACK");
   tft.setCursor(200, 375);
+  tft.print("NEXT");
+}
+
+void connectionScreen() {
+  tft.fillScreen(HX8357_WHITE);
+  tft.fillRect(0,0,320,100, HX8357_BLUE);
+  tft.fillRect(0,100,320,260, HX8357_BLACK);
+  tft.fillRect(60, 160, 200, 60 , HX8357_RED);
+  tft.fillRect(60, 240, 200, 60 , HX8357_RED);
+  tft.fillRect(0, 420, 140, 60 , HX8357_GREEN);
+  tft.fillRect(180, 420, 140, 60 , HX8357_GREEN);
+  
+  tft.setTextSize(2.5);
+  tft.setCursor(30, 50);
+  tft.setTextColor(HX8357_WHITE);
+  tft.print("Connect to Cloud");
+  tft.setCursor(200, 50);
+  tft.print(":");
+
+  tft.setTextSize(1.5);
+  tft.setTextColor(HX8357_WHITE);
+  tft.setCursor(20, 330);
+  tft.print("Status: ");
+  
+  tft.setTextSize(2);
+  tft.setCursor(80, 190);
+  tft.print("Connect to a network");
+  
+  tft.setTextSize(4);
+  tft.setCursor(20, 435);
+  tft.print("BACK");
+  tft.setCursor(200, 435);
   tft.print("HOME");
-=======
-  delay(1000);
->>>>>>> f83e7629de01502a9f2c3c0e99870668310f6c95
->>>>>>> dc36248d8a472fcf757399d5b16a291876216e14
+}
+
+void updateStatusMessage(String message) {
+  tft.fillRect(80,330,270,30, HX8357_BLACK);
+  tft.setTextSize(1.5);
+  tft.setTextColor(HX8357_WHITE);
+  tft.setCursor(80, 330);
+  tft.print(message);
 }
