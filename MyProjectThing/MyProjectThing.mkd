@@ -10,7 +10,7 @@ This will involve using the following components:
  - a Volatile Organic Compounds sensor (MQ-135)
  - a digital temperature and humidity sensor, the AM2302
 
-The success of the project will be determined by the ability of the device to return real-time values describing the state of the air on the unphone.
+The success of the project will be determined by the ability of the device to return real-time values describing the state of the air on the ___Unphone___.
 
 # UI Design :
 
@@ -30,14 +30,22 @@ This is the concept:
 
 ![](images/Mockup_analysis.png)
 
-Iterations of the designs have been made from the original. design to make it more useable and practical.
+Iterations of the designs have been made from the original. design to make it more useable and practical. As the project went on more ideas were implemented into the system requiring us to change to look of the system.
+
+The major issue as far as the UI implementation was concerned was reading the touch position of the screen correctly. We found that having consecutive screens with the same buttons at the same location caused the screens to switch between each other. This made us to alter our designs to have buttons at different locations of the screen for consecutive pages to enable smooth navigation through the pages of the ___Unphone___.
+
+A smaller problem was the best way to represent the data visually on the ___Unphone___ considering the size of the screen, the frequency of the data and the different scales between the data from the four sensors. We decided on using line graphs, having implemented both line and bar graphs.
+This would show a continuous change in the information from the data in comparison to the bar graphs which inly showed a sample of the data received at a given time rather than a continuous change.
+
 # Air Monitor Design :
 
 # Back End Design :
 The back end design for this project was based on analysis of the information being received from the sensors. This data needed to be displayed and collected in a logical way that allowed for it to be studied.
 
-Adafruit.io is a platform that allows the creation of dashboards and feeds, which can display the live data from the sensors, and store them for 30 minutes. Furthermore, it allows the connection to services such as IFTTT which would allow the Adafruit platform to send alerts to selected email addresses about the status of the data collected.
+___Adafruit___.io is a platform that allows the creation of dashboards and feeds, which can display the live data from the sensors, and store them for 30 minutes. Furthermore, it allows the connection to services such as IFTTT which would allow the ___Adafruit___ platform to send alerts to selected email addresses about the status of the data collected.
 
-This raised a problem. The dust and gas sensors would not read values while the set up is connected to the internet. This meant that the unphone would have to store the data from the sensors and send it to the Adafruit platform at intervals, during which no sensor readings would be taken. Afterwards the device would disconnect from the internet and continue monitoring the air.
+This raised a problem. The dust and gas sensors would not read values while the set up is connected to the internet. This meant that the ___Unphone___ would have to store the data from the sensors and send it to the ___Adafruit___ platform at intervals, during which no sensor readings would be taken. Afterwards the device would disconnect from the internet and continue monitoring the air.
 
 ![](images/dashboard.png)
+
+The connection to the internet would be created manually to increase the security of the system. This process involved making the ___Unphone___ an access point which can be connected to by any mobile phone. using our mobile phones we can validate our credentials and initialise the connection between the ___Adafruit___ platform and the ___Unphone___.
