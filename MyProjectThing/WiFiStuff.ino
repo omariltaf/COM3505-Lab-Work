@@ -26,7 +26,6 @@ Adafruit_MQTT_Publish dust = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/d
 ESPWebServer webServer(80);
 const char* ssid = "omarneville";
 const char* password = "password";
-const char* host = "com3505.gate.ac.uk";
 const char* networks[20];
 char buff[2046];
 char HTMLstart[] = "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset='utf-8'>\n</head>\n<body>\n<form action='http://192.168.4.1/submit' method = 'POST'>\n  Select Network: <select name='ssid'>\n ";
@@ -37,6 +36,8 @@ char HTMLpart4[] = "";
 char HTMLpart5[] = "</option>\n ";
 char HTMLend[] = "</select>\n  <br>Enter Password:\n  <input type='password' name='password'>\n  <br>Enter Adafruit.io Username:\n  <input type='text' name='adauser'>\n <br><input type='submit' value='Submit'>\n</form>\n</body>\n</html>\n";
 int value = 0;
+
+boolean takeRequests = true;
 
 void MQTT_connect();
 
@@ -51,11 +52,14 @@ void connectionInit() {
 }
 
 void connectionLoop() {
-  Serial.println("looooooooooooool1111111");
-  while(true) {
-    Serial.println("looooooooooooool222222");
+  while(takeRequests) {
+    Serial.println("looooooooooooool");
     webServer.handleClient();
   }
+  Serial.println("hahha");
+  updateStatusMessage("Data sent. WiFi disconnected.");
+  WiFi.disconnect();
+  setSensorPins();
 }
 
 void getNetworks() {
@@ -157,11 +161,12 @@ void handleSubmit() {
 //    while (true) {
 //      analysisLoop();
 //    }
-
-    for(int i = 0; i < 20; i++) {
+    updateStatusMessage("Connected. Now sending data...");
+    for(int i = 0; i < 7; i++) {
       analysisLoop(i);
-      delay(10000);
+      delay(1000);
     }
+    takeRequests = false;
 }
 
 void createAP() {

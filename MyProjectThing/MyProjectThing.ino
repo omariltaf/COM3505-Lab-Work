@@ -104,11 +104,7 @@ void setup() {
   lmic_init();
   lmic_do_send(&sendjob);
 
-  analogSetPinAttenuation(GasPin, ADC_11db);   // this sets ADC to 0-3.3V range
-  analogSetPinAttenuation(DustPin, ADC_11db);
-  dustsensor.begin(DustLEDPin, DustPin);
-  dustsensor.setInputVolts(3.3);
-  dustsensor.setADCbit(12);
+  setSensorPins();
   
   dht.setup(dhtPin, DHTesp::AM2302);
   Serial.println("DHT initiated");
@@ -116,6 +112,14 @@ void setup() {
   tft.fillScreen(HX8357_WHITE);
 }
 
+void setSensorPins() {
+  analogSetPinAttenuation(GasPin, ADC_11db);   // this sets ADC to 0-3.3V range
+  analogSetPinAttenuation(DustPin, ADC_11db);
+  dustsensor.begin(DustLEDPin, DustPin);
+  dustsensor.setInputVolts(3.3);
+  dustsensor.setADCbit(12);
+}
+ 
 int prevX = 0;
 int prevY = 0;
 void loop() {
@@ -221,9 +225,10 @@ void loop() {
     } else if (p.x < 320 && p.x > 180 && p.y > 420 && p.y < 480) {
       screen = 1;
       currentScreenIsDrawn = false; connectNetworkPressed = false; // disconnect wifi
-    } else if (p.x < 260 && p.x > 60 && p.y > 160 && p.y < 220 && !connectNetworkPressed) {
-      updateStatusMessage("Gathering Dust and Gas sensor readings before connecting...");
+    } else if (p.x < 260 && p.x > 60 && p.y > 160 && p.y < 280 && !connectNetworkPressed) {
+      updateStatusMessage("Gathering sensor readings...");
       saveDustGasValues();
+      delay(1000);
       updateStatusMessage("Connecting...");
       connectionInit();
       connectionLoop();
@@ -388,9 +393,9 @@ void lineGraph(float current, String yLabel){
     tft.setCursor(0,110);
     tft.println(yLabel);
 
-    tft.drawLine(25,220,300,220,HX8357_RED);
-    tft.setCursor(270,230);
-    tft.println("Optimum");
+//    tft.drawLine(25,220,300,220,HX8357_RED);
+//    tft.setCursor(270,230);
+//    tft.println("Optimum");
   }
   tft.drawLine(oldx,oldy,penx, peny, HX8357_WHITE);
 }
@@ -401,15 +406,15 @@ void resetValues() {
 }
 
 float scaleDustValue(float value) {
-  return ((value-0)/(100-0))*(200-0)+0;
+  return ((value-0)/(40-0))*(200-0)+0;
 }
 
 float scaleGasValue(float value) {
-  return ((value-0)/(100-0))*(200-0)+0;
+  return ((value-0)/(1-0))*(200-0)+0;
 }
 
 float scaleTemperatureValue(float value) {
-  return ((value-0)/(100-0))*(200-0)+0;
+  return ((value-0)/(50-0))*(200-0)+0;
 }
 
 float scaleHumidityValue(float value) {
@@ -555,9 +560,8 @@ void humidityScreen() {
 void connectionScreen() {
   tft.fillScreen(HX8357_WHITE);
   tft.fillRect(0,0,320,100, HX8357_BLUE);
-  tft.fillRect(0,100,320,260, HX8357_BLACK);
-  tft.fillRect(60, 160, 200, 60 , HX8357_RED);
-  tft.fillRect(60, 240, 200, 60 , HX8357_RED);
+  tft.fillRect(0,100,320,260, HX8357_RED);
+  tft.fillRect(60, 160, 200, 120 , HX8357_GREEN);
   tft.fillRect(0, 420, 140, 60 , HX8357_GREEN);
   tft.fillRect(180, 420, 140, 60 , HX8357_GREEN);
   
@@ -573,9 +577,11 @@ void connectionScreen() {
   tft.setCursor(20, 330);
   tft.print("Status: ");
   
-  tft.setTextSize(2);
-  tft.setCursor(80, 190);
-  tft.print("Connect to a network");
+  tft.setTextSize(2.5);
+  tft.setCursor(100, 200);
+  tft.print("Connect &");
+  tft.setCursor(100, 230);
+  tft.print("Send Data");
   
   tft.setTextSize(4);
   tft.setCursor(20, 435);
@@ -585,8 +591,8 @@ void connectionScreen() {
 }
 
 void updateStatusMessage(String message) {
-  tft.fillRect(80,330,270,30, HX8357_BLACK);
-  tft.setTextSize(1.5);
+  tft.fillRect(80,330,270,30, HX8357_RED);
+  tft.setTextSize(1);
   tft.setTextColor(HX8357_WHITE);
   tft.setCursor(80, 330);
   tft.print(message);
