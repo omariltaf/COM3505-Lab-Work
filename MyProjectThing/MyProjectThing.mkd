@@ -39,6 +39,13 @@ This would show a continuous change in the information from the data in comparis
 
 # Air Monitor Design :
 
+The circuit design for the air monitor was provided at the beginning of this project. It looked as follows:
+
+![](images/Air-quality-Breadboard.png)
+
+We have been successful in the creation of this circuit, and are currently receiving values from all the sensors. The circuit is powered by the ___Unphone___.
+Additional to what was given to us, we added a switch to the circuit to allow us to control the sensor reading time for the sensors.
+
 # Back End Design :
 The back end design for this project was based on analysis of the information being received from the sensors. This data needed to be displayed and collected in a logical way that allowed for it to be studied.
 
