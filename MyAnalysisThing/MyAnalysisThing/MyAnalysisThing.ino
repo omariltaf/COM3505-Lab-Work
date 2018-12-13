@@ -5,9 +5,35 @@
 #include "IOExpander.h"         // unPhone's IOExpander (controlled via I²C)
 #include <Adafruit_Sensor.h>    // base class etc. for sensor abstraction
 #include <Adafruit_LSM303_U.h>  // the accelerometer sensor
-#include <Adafruit_CC3000.h>
-#include <ccspi.h>
-#include <PubSubClient.h>
+
+#include <WiFi.h>
+#include "Adafruit_MQTT.h"
+#include "Adafruit_MQTT_Client.h"
+
+#define WLAN_SSID       "Neville"
+#define WLAN_PASS       "neville1"
+
+
+#define AIO_SERVER      "io.adafruit.com"
+#define AIO_SERVERPORT  1883                   // use 8883 for SSL
+#define AIO_USERNAME    "nevillekitala"
+#define AIO_KEY         "ce6d1f76919149418106828f8b4bda7c"
+
+WiFiClient client;
+
+Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
+
+/****************************** Feeds ***************************************/
+
+Adafruit_MQTT_Publish humidity = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/humidity");
+Adafruit_MQTT_Publish compound = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/compound");
+Adafruit_MQTT_Publish temperature = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/temperature");
+Adafruit_MQTT_Publish dust = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/dust-sensor");
+
+
+/*************************** Sketch Code ************************************/
+
+void MQTT_connect();
 
 // power management chip config
 byte I2Cadd = 0x6b;      // I2C address of the PMU
@@ -30,23 +56,12 @@ int peny = 0;
 int oldx = 0;
 int oldy = 0;
 
-#define IO_USERNAME  "nevillekitala"
-#define IO_KEY       "ce6d1f76919149418106828f8b4bda7c"
-
-#define TEMPERATURE_PUBLISH_PATH "nevillekitala/feeds/tempurature/data/send.json"
-#define HUMIDITY_PUBLISH_PATH "nevillekitala/feeds/humidity/data/send.json"
-
-
-  
 // setup ////////////////////////////////////////////////////////////////////
 void setup(void) {
   Serial.begin(115200);
   Serial.println("Starting");
   Serial.println("Version 1.01");
   Serial.println("etch-a-sketch by gareth");
-
-  Adafruit_CC3000_Client client = Adafruit_CC3000_Client();
-  PubSubClient mqttclient("io.adafruit.com", 1883, callback, client);
 
   /* Initialise the sensor */
   Wire.setClock(100000);
@@ -55,6 +70,15 @@ void setup(void) {
     Serial.println("Ooops, no LSM303 detected ... Check your wiring!");
     while(1);
   }
+
+  WiFi.begin(WLAN_SSID, WLAN_PASS);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  
+  Serial.println("WiFi connected");
+  Serial.println("IP address: "); Serial.println(WiFi.localIP());
   
   IOExpander::begin();
   checkPowerSwitch(); // check if the power switch is now off & if so shutdown
@@ -78,11 +102,47 @@ void loop() {
   checkPowerSwitch();
   int rand = random(20,309);
   barGraph(rand);
-  delay(500);
-  mqttclient.publish(TEMPERATURE_PUBLISH_PATH, (char *) String(t).c_str());
-  delay(2000);
-  mqttclient.publish(HUMIDITY_PUBLISH_PATH, (char *) String(h).c_str());
-  delay(2000);
+  delay(4000);
+  
+  MQTT_connect();
+
+  // Now we can publish stuff!
+  Serial.print(F("\nSending humidity val "));
+  Serial.print(rand);
+  Serial.print("...");
+  if (! humidity.publish(rand)) {
+    Serial.println(F("Failed"));
+  } else {
+    Serial.println(F("OK!"));
+  }
+
+  Serial.print(F("\nSending compound val "));
+  Serial.print(rand);
+  Serial.print("...");
+  if (! compound.publish(rand*1.1)) {
+    Serial.println(F("Failed"));
+  } else {
+    Serial.println(F("OK!"));
+  }
+  
+  Serial.print(F("\nSending dust val "));
+  Serial.print(rand);
+  Serial.print("...");
+  if (! dust.publish(rand/2)) {
+    Serial.println(F("Failed"));
+  } else {
+    Serial.println(F("OK!"));
+  }
+  
+  Serial.print(F("\nSending temperature val "));
+  Serial.print(rand);
+  Serial.print("...");
+  if (! temperature.publish(100 - rand)) {
+    Serial.println(F("Failed"));
+  } else {
+    Serial.println(F("OK!"));
+  }
+  
 }
 
 //analysis
@@ -216,4 +276,29 @@ byte read8(byte address, byte reg) {
   value = Wire.read();
   Wire.endTransmission();
   return value;
+}
+
+void MQTT_connect() {
+  int8_t ret;
+
+  // Stop if already connected.
+  if (mqtt.connected()) {
+    return;
+  }
+
+  Serial.print("Connecting to MQTT... ");
+
+  uint8_t retries = 3;
+  while ((ret = mqtt.connect()) != 0) { // connect will return 0 for connected
+       Serial.println(mqtt.connectErrorString(ret));
+       Serial.println("Retrying MQTT connection in 5 seconds...");
+       mqtt.disconnect();
+       delay(5000);  // wait 5 seconds
+       retries--;
+       if (retries == 0) {
+         // basically die and wait for WDT to reset me
+         while (1);
+       }
+  }
+  Serial.println("MQTT Connected!");
 }
