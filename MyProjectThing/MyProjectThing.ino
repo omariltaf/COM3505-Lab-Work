@@ -121,23 +121,15 @@ void loop() {
   TS_Point p = ts.getPoint();
   p.x = map(p.x, TS_MAXX, TS_MINX, tft.width(), 0);
   p.y = map(p.y, TS_MAXY, TS_MINY, 0, tft.height());
-//  Serial.println(p.x);
-//  if (p.x == prevX || p.y == prevY) {
-//    return;
-//  } else {
-//    prevX = p.x;
-//    prevY = p.y;
-//  }
   
   if (screen == 1) {
     if (!currentScreenIsDrawn) {
       homeScreen();
       currentScreenIsDrawn = true;
     }
-    if(p.x < 230 && p.x > 90 && p.y > 360 && p.y < 420) {
+    if(p.x < 230 && p.x > 90 && p.y > 300 && p.y < 360) {
       screen = 2;
       currentScreenIsDrawn = false;
-      Serial.println("lol");
     }
   } else if (screen == 2) {
     if (!currentScreenIsDrawn) {
@@ -145,44 +137,97 @@ void loop() {
       currentScreenIsDrawn = true;
     }
     drawValues();
-    if(p.x < 230 && p.x > 90 && p.y > 360 && p.y < 420) {
+    if(p.x < 140 && p.x > 0 && p.y > 360 && p.y < 420) {
       screen = 1;
       currentScreenIsDrawn = false;
-      Serial.println("lol2");
+    } else if (p.x < 320 && p.x > 180 && p.y > 360 && p.y < 420) {
+      screen = 3;
+      currentScreenIsDrawn = false;
+    }
+  } else if (screen == 3) {
+    if (!currentScreenIsDrawn) {
+      dustScreen();
+      currentScreenIsDrawn = true;
+    }
+    if(p.x < 140 && p.x > 0 && p.y > 420 && p.y < 480) {
+      screen = 2;
+      currentScreenIsDrawn = false;
+    } else if (p.x < 320 && p.x > 180 && p.y > 420 && p.y < 480) {
+      screen = 4;
+      currentScreenIsDrawn = false;
+    }
+  } else if (screen == 4) {
+    if (!currentScreenIsDrawn) {
+      gasScreen();
+      currentScreenIsDrawn = true;
+    }
+    if(p.x < 140 && p.x > 0 && p.y > 360 && p.y < 420) {
+      screen = 3;
+      currentScreenIsDrawn = false;
+    } else if (p.x < 320 && p.x > 180 && p.y > 360 && p.y < 420) {
+      screen = 5;
+      currentScreenIsDrawn = false;
+    }
+  } else if (screen == 5) {
+    if (!currentScreenIsDrawn) {
+      temperatureScreen();
+      currentScreenIsDrawn = true;
+    }
+    if(p.x < 140 && p.x > 0 && p.y > 420 && p.y < 480) {
+      screen = 4;
+      currentScreenIsDrawn = false;
+    } else if (p.x < 320 && p.x > 180 && p.y > 420 && p.y < 480) {
+      screen = 6;
+      currentScreenIsDrawn = false;
+    }
+  } else if (screen == 6) {
+    if (!currentScreenIsDrawn) {
+      humidityScreen();
+      currentScreenIsDrawn = true;
+    }
+    if(p.x < 140 && p.x > 0 && p.y > 360 && p.y < 420) {
+      screen = 5;
+      currentScreenIsDrawn = false;
+    } else if (p.x < 320 && p.x > 180 && p.y > 360 && p.y < 420) {
+      screen = 1;
+      currentScreenIsDrawn = false;
     }
   }
 }
 
 void homeScreen() {
-    tft.fillRect(0,0,320,200, HX8357_BLUE);
-    tft.fillRect(0,200,320,100, HX8357_RED);
-    tft.fillRect(90, 360, 140, 60 , HX8357_GREEN);
+  tft.fillScreen(HX8357_WHITE);
+  tft.fillRect(0,0,320,200, HX8357_BLUE);
+  tft.fillRect(0,200,320,100, HX8357_RED);
+  tft.fillRect(90, 300, 140, 60 , HX8357_GREEN);
     
-    tft.setTextSize(4);
-    tft.setCursor(30, 80);
-    tft.setTextColor(HX8357_WHITE);
-    tft.print("Air Quality");
-    tft.setCursor(80, 120);
-    tft.print("Monitor");
+  tft.setTextSize(4);
+  tft.setCursor(30, 80);
+  tft.setTextColor(HX8357_WHITE);
+  tft.print("Air Quality");
+  tft.setCursor(80, 120);
+  tft.print("Monitor");
 
-    tft.setTextSize(2);
-    tft.setCursor(115, 220);
-    tft.print("Built by");
-    tft.setCursor(90, 250);
-    tft.print("Omar Iltaf &");
-    tft.setCursor(80, 270);
-    tft.print("Neville Kitala");
+  tft.setTextSize(2);
+  tft.setCursor(115, 220);
+  tft.print("Built by");
+  tft.setCursor(90, 250);
+  tft.print("Omar Iltaf &");
+  tft.setCursor(80, 270);
+  tft.print("Neville Kitala");
 
-    tft.setTextSize(4);
-    tft.setCursor(102, 375);
-    tft.setTextColor(HX8357_WHITE);
-    tft.print("BEGIN");
+  tft.setTextSize(4);
+  tft.setCursor(102, 320);
+  tft.setTextColor(HX8357_WHITE);
+  tft.print("BEGIN");
 }
 
 void valueScreen() {
+  tft.fillScreen(HX8357_WHITE);
   tft.fillRect(0,0,320,100, HX8357_BLUE);
   tft.fillRect(0,100,320,200, HX8357_RED);
-  tft.fillRect(90, 360, 140, 60 , HX8357_GREEN);
+  tft.fillRect(0, 360, 140, 60 , HX8357_GREEN);
+  tft.fillRect(180, 360, 140, 60 , HX8357_GREEN);
   
   tft.setTextSize(2.5);
   tft.setCursor(40, 50);
@@ -209,12 +254,15 @@ void valueScreen() {
   tft.print(":");
 
   tft.setTextSize(4);
-  tft.setCursor(105, 375);
   tft.setTextColor(HX8357_WHITE);
+  tft.setCursor(20, 375);
   tft.print("BACK");
+  tft.setCursor(200, 375);
+  tft.print("NEXT");
 }
 
 void drawValues() {
+  tft.fillRect(220,130,100,170, HX8357_RED);
   tft.setTextSize(2.5);
   tft.setTextColor(HX8357_WHITE);
   
@@ -238,5 +286,161 @@ void drawValues() {
   tft.setCursor(220,250);
   tft.print(String(newValues.humidity) + "%RH");
 
-  delay(1000);
+  delay(500);
+}
+
+void dustScreen() {
+  tft.fillScreen(HX8357_WHITE);
+  tft.fillRect(0,0,320,100, HX8357_BLUE);
+  tft.fillRect(0,100,320,260, HX8357_RED);
+  tft.fillRect(0, 420, 140, 60 , HX8357_GREEN);
+  tft.fillRect(180, 420, 140, 60 , HX8357_GREEN);
+  
+  tft.setTextSize(2.5);
+  tft.setCursor(40, 50);
+  tft.setTextColor(HX8357_WHITE);
+  tft.print("Dust Density");
+
+//  tft.setTextSize(2.5);
+//  tft.setTextColor(HX8357_WHITE);
+//  tft.setCursor(30, 130);
+//  tft.print("Dust Density");
+//  tft.setCursor(200, 130);
+//  tft.print(":");
+//  tft.setCursor(30, 170);
+//  tft.print("Gas Reading");
+//  tft.setCursor(200, 170);
+//  tft.print(":");
+//  tft.setCursor(30, 210);
+//  tft.print("Temperature");
+//  tft.setCursor(200, 210);
+//  tft.print(":");
+//  tft.setCursor(30, 250);
+//  tft.print("Humidity");
+//  tft.setCursor(200, 250);
+//  tft.print(":");
+
+  tft.setTextSize(4);
+  tft.setTextColor(HX8357_WHITE);
+  tft.setCursor(20, 435);
+  tft.print("BACK");
+  tft.setCursor(200, 435);
+  tft.print("NEXT");
+}
+
+void gasScreen() {
+  tft.fillScreen(HX8357_WHITE);
+  tft.fillRect(0,0,320,100, HX8357_BLUE);
+  tft.fillRect(0,100,320,260, HX8357_RED);
+  tft.fillRect(0, 360, 140, 60 , HX8357_GREEN);
+  tft.fillRect(180, 360, 140, 60 , HX8357_GREEN);
+  
+  tft.setTextSize(2.5);
+  tft.setCursor(40, 50);
+  tft.setTextColor(HX8357_WHITE);
+  tft.print("Gas Reading");
+
+//  tft.setTextSize(2.5);
+//  tft.setTextColor(HX8357_WHITE);
+//  tft.setCursor(30, 130);
+//  tft.print("Dust Density");
+//  tft.setCursor(200, 130);
+//  tft.print(":");
+//  tft.setCursor(30, 170);
+//  tft.print("Gas Reading");
+//  tft.setCursor(200, 170);
+//  tft.print(":");
+//  tft.setCursor(30, 210);
+//  tft.print("Temperature");
+//  tft.setCursor(200, 210);
+//  tft.print(":");
+//  tft.setCursor(30, 250);
+//  tft.print("Humidity");
+//  tft.setCursor(200, 250);
+//  tft.print(":");
+
+  tft.setTextSize(4);
+  tft.setTextColor(HX8357_WHITE);
+  tft.setCursor(20, 375);
+  tft.print("BACK");
+  tft.setCursor(200, 375);
+  tft.print("NEXT");
+}
+
+void temperatureScreen() {
+  tft.fillScreen(HX8357_WHITE);
+  tft.fillRect(0,0,320,100, HX8357_BLUE);
+  tft.fillRect(0,100,320,260, HX8357_RED);
+  tft.fillRect(0, 420, 140, 60 , HX8357_GREEN);
+  tft.fillRect(180, 420, 140, 60 , HX8357_GREEN);
+  
+  tft.setTextSize(2.5);
+  tft.setCursor(40, 50);
+  tft.setTextColor(HX8357_WHITE);
+  tft.print("Temperature");
+
+//  tft.setTextSize(2.5);
+//  tft.setTextColor(HX8357_WHITE);
+//  tft.setCursor(30, 130);
+//  tft.print("Dust Density");
+//  tft.setCursor(200, 130);
+//  tft.print(":");
+//  tft.setCursor(30, 170);
+//  tft.print("Gas Reading");
+//  tft.setCursor(200, 170);
+//  tft.print(":");
+//  tft.setCursor(30, 210);
+//  tft.print("Temperature");
+//  tft.setCursor(200, 210);
+//  tft.print(":");
+//  tft.setCursor(30, 250);
+//  tft.print("Humidity");
+//  tft.setCursor(200, 250);
+//  tft.print(":");
+
+  tft.setTextSize(4);
+  tft.setTextColor(HX8357_WHITE);
+  tft.setCursor(20, 435);
+  tft.print("BACK");
+  tft.setCursor(200, 435);
+  tft.print("NEXT");
+}
+
+void humidityScreen() {
+  tft.fillScreen(HX8357_WHITE);
+  tft.fillRect(0,0,320,100, HX8357_BLUE);
+  tft.fillRect(0,100,320,260, HX8357_RED);
+  tft.fillRect(0, 360, 140, 60 , HX8357_GREEN);
+  tft.fillRect(180, 360, 140, 60 , HX8357_GREEN);
+  
+  tft.setTextSize(2.5);
+  tft.setCursor(40, 50);
+  tft.setTextColor(HX8357_WHITE);
+  tft.print("Humidity");
+
+//  tft.setTextSize(2.5);
+//  tft.setTextColor(HX8357_WHITE);
+//  tft.setCursor(30, 130);
+//  tft.print("Dust Density");
+//  tft.setCursor(200, 130);
+//  tft.print(":");
+//  tft.setCursor(30, 170);
+//  tft.print("Gas Reading");
+//  tft.setCursor(200, 170);
+//  tft.print(":");
+//  tft.setCursor(30, 210);
+//  tft.print("Temperature");
+//  tft.setCursor(200, 210);
+//  tft.print(":");
+//  tft.setCursor(30, 250);
+//  tft.print("Humidity");
+//  tft.setCursor(200, 250);
+//  tft.print(":");
+
+  tft.setTextSize(4);
+  tft.setTextColor(HX8357_WHITE);
+  tft.setCursor(20, 375);
+  tft.print("BACK");
+  tft.setCursor(200, 375);
+  tft.print("HOME");
 }
