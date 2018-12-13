@@ -56,3 +56,23 @@ This raised a problem. The dust and gas sensors would not read values while the 
 ![](images/dashboard.png)
 
 The connection to the internet would be created manually to increase the security of the system. This process involved making the ___Unphone___ an access point which can be connected to by any mobile phone. using our mobile phones we can validate our credentials and initialise the connection between the ___Adafruit___ platform and the ___Unphone___.
+
+# Testing :
+
+For all the core components created, testing was carried out before they were included in the system. These included:
+
+_1. touch input:_
+
+This testing was necessary as it informed the team what was possible for the _UI_ design of this project. An issue with navigation using buttons was discovered, which influenced the designs we came up with.
+
+_2. Receiving data from the sensors:_
+
+This confirmed that the circuit built for the project worked, and that the sensors were functional. This also allowed us to make minor changes to the circuit to allow for it to be personalised and more functional according to the specifications for this project.
+
+_3. becoming an access point:_
+
+This allowed us to see if validation from mobile phones was possible, which we intended to be a security feature, to allow only authorised users to connect to the cloud.
+
+_4. connecting to the cloud:_
+
+This testing was essential for the uploading of data to the ___Adafruit___.io platform, which shows up to twenty samples of the latest data. This enabled us to see what was possible with the free version of the platform, as well as the constraints around the uploading process.
