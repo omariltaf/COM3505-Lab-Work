@@ -2,7 +2,7 @@
 
 # Aim:
 
-The aim for this project was to create a fully functional air monitoring system that would be able to test for dust, for volitile organic compunds, for humidty and for tempurature.
+The aim for this project was to create a fully functional air monitoring system that would be able to test for dust, for volatile organic compounds, for humidity and for temperature.
 
 This will involve using the following components:
  - the ___Unphone___.
@@ -10,7 +10,7 @@ This will involve using the following components:
  - a Volatile Organic Compounds sensor (MQ-135)
  - a digital temperature and humidity sensor, the AM2302
 
-The success of the project will be determined by the ability of the device to return realtime values describing the state of the air on the unphone.
+The success of the project will be determined by the ability of the device to return real-time values describing the state of the air on the unphone.
 
 # UI Design :
 
@@ -24,13 +24,20 @@ It will have a second display screen that will display the values being returned
 
 ![](images/Mockup_readings.png)
 
-Additionally, the design required to show the results from the sensor as well as the analysis for thise results. We decided to have a navigation buttons to enable changing between the different pages, which will show simple visual analysis of the data from the sensors. It will show what the optimum values should be, to allow comparison with the live values from the sensor. The issue with this is because of the amount of information from the sensors, only a fixed amount of information can be visualised at a go.
+Additionally, the design required to show the results from the sensor as well as the analysis for these results. We decided to have a navigation buttons to enable changing between the different pages, which will show simple visual analysis of the data from the sensors. It will show what the optimum values should be, to allow comparison with the live values from the sensor. The issue with this is because of the amount of information from the sensors, only a fixed amount of information can be visualised at a go.
 
 This is the concept:
 
 ![](images/Mockup_analysis.png)
 
-Iterations of the designs have been made from the original. design to ,ake it more useable and practical.
+Iterations of the designs have been made from the original. design to make it more useable and practical.
 # Air Monitor Design :
 
-# Backend Design :
+# Back End Design :
+The back end design for this project was based on analysis of the information being received from the sensors. This data needed to be displayed and collected in a logical way that allowed for it to be studied.
+
+Adafruit.io is a platform that allows the creation of dashboards and feeds, which can display the live data from the sensors, and store them for 30 minutes. Furthermore, it allows the connection to services such as IFTTT which would allow the Adafruit platform to send alerts to selected email addresses about the status of the data collected.
+
+This raised a problem. The dust and gas sensors would not read values while the set up is connected to the internet. This meant that the unphone would have to store the data from the sensors and send it to the Adafruit platform at intervals, during which no sensor readings would be taken. Afterwards the device would disconnect from the internet and continue monitoring the air.
+
+![](images/dashboard.png)
