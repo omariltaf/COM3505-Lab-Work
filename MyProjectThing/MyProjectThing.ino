@@ -266,6 +266,20 @@ void drawValues() {
   tft.setTextSize(2.5);
   tft.setTextColor(HX8357_WHITE);
   
+<<<<<<< HEAD
+   TS_Point p = ts.getPoint();
+   p.x = map(p.x, TS_MINX, TS_MAXX, tft.width(), 0);
+   p.y = map(p.y, TS_MINY, TS_MAXY, 0, tft.height());
+
+   if(p.x < 210 && p.x > 110 && p.y > 100 && p.y < 140 && !disp) {
+    disp = true;
+    start = !start;
+    p.x = 0;
+    p.y = 0;
+    p.x = map(p.x, TS_MINX, TS_MAXX, tft.width(), 0);
+    p.y = map(p.y, TS_MINY, TS_MAXY, 0, tft.height());
+   }
+=======
   tft.setCursor(220,130);
   float dust = dustsensor.getDustDensity();
   tft.print(dust);
@@ -286,6 +300,7 @@ void drawValues() {
   tft.setCursor(220,250);
   tft.print(String(newValues.humidity) + "%RH");
 
+<<<<<<< HEAD
   delay(500);
 }
 
@@ -443,4 +458,8 @@ void humidityScreen() {
   tft.print("BACK");
   tft.setCursor(200, 375);
   tft.print("HOME");
+=======
+  delay(1000);
+>>>>>>> f83e7629de01502a9f2c3c0e99870668310f6c95
+>>>>>>> dc36248d8a472fcf757399d5b16a291876216e14
 }
