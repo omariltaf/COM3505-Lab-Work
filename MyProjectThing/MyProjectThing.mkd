@@ -2,7 +2,7 @@
 
 # Aim:
 
-The aim for this project was to create a fully functional air monitoring system that would be able to test for dust, for volitile organic compunds, for humidty and for tempurature.
+The aim for this project was to create a fully functional air monitoring system that would be able to test for dust, for volatile organic compounds, for humidity and for temperature.
 
 This will involve using the following components:
  - the ___Unphone___.
@@ -10,7 +10,7 @@ This will involve using the following components:
  - a Volatile Organic Compounds sensor (MQ-135)
  - a digital temperature and humidity sensor, the AM2302
 
-The success of the project will be determined by the ability of the device to return realtime values describing the state of the air on the unphone.
+The success of the project will be determined by the ability of the device to return real-time values describing the state of the air on the ___Unphone___.
 
 # UI Design :
 
@@ -24,13 +24,35 @@ It will have a second display screen that will display the values being returned
 
 ![](images/Mockup_readings.png)
 
-Additionally, the design required to show the results from the sensor as well as the analysis for thise results. We decided to have a navigation buttons to enable changing between the different pages, which will show simple visual analysis of the data from the sensors. It will show what the optimum values should be, to allow comparison with the live values from the sensor. The issue with this is because of the amount of information from the sensors, only a fixed amount of information can be visualised at a go.
+Additionally, the design required to show the results from the sensor as well as the analysis for these results. We decided to have a navigation buttons to enable changing between the different pages, which will show simple visual analysis of the data from the sensors. It will show what the optimum values should be, to allow comparison with the live values from the sensor. The issue with this is because of the amount of information from the sensors, only a fixed amount of information can be visualised at a go.
 
 This is the concept:
 
 ![](images/Mockup_analysis.png)
 
-Iterations of the designs have been made from the original. design to ,ake it more useable and practical.
+Iterations of the designs have been made from the original. design to make it more useable and practical. As the project went on more ideas were implemented into the system requiring us to change to look of the system.
+
+The major issue as far as the UI implementation was concerned was reading the touch position of the screen correctly. We found that having consecutive screens with the same buttons at the same location caused the screens to switch between each other. This made us to alter our designs to have buttons at different locations of the screen for consecutive pages to enable smooth navigation through the pages of the ___Unphone___.
+
+A smaller problem was the best way to represent the data visually on the ___Unphone___ considering the size of the screen, the frequency of the data and the different scales between the data from the four sensors. We decided on using line graphs, having implemented both line and bar graphs.
+This would show a continuous change in the information from the data in comparison to the bar graphs which inly showed a sample of the data received at a given time rather than a continuous change.
+
 # Air Monitor Design :
 
-# Backend Design :
+The circuit design for the air monitor was provided at the beginning of this project. It looked as follows:
+
+![](images/Air-quality-Breadboard.png)
+
+We have been successful in the creation of this circuit, and are currently receiving values from all the sensors. The circuit is powered by the ___Unphone___.
+Additional to what was given to us, we added a switch to the circuit to allow us to control the sensor reading time for the sensors.
+
+# Back End Design :
+The back end design for this project was based on analysis of the information being received from the sensors. This data needed to be displayed and collected in a logical way that allowed for it to be studied.
+
+___Adafruit___.io is a platform that allows the creation of dashboards and feeds, which can display the live data from the sensors, and store them for 30 minutes. Furthermore, it allows the connection to services such as IFTTT which would allow the ___Adafruit___ platform to send alerts to selected email addresses about the status of the data collected.
+
+This raised a problem. The dust and gas sensors would not read values while the set up is connected to the internet. This meant that the ___Unphone___ would have to store the data from the sensors and send it to the ___Adafruit___ platform at intervals, during which no sensor readings would be taken. Afterwards the device would disconnect from the internet and continue monitoring the air.
+
+![](images/dashboard.png)
+
+The connection to the internet would be created manually to increase the security of the system. This process involved making the ___Unphone___ an access point which can be connected to by any mobile phone. using our mobile phones we can validate our credentials and initialise the connection between the ___Adafruit___ platform and the ___Unphone___.
